@@ -21,6 +21,14 @@ const commentRoutes = require("./routes/comments"),
 
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
+app.enable('trust proxy');
+app.use(function(req, res, next){ console.log(req.protocol);
+	if(req.protocol === "https"){
+		next();
+	} else {
+		res.redirect("https://" + req.hostname + req.url);
+	}
+});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
 app.use(express.static(__dirname + "/public"));
@@ -72,13 +80,6 @@ passport.deserializeUser(User.deserializeUser());
 app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
-
-app.use(function(req, res, next) { 
-	if (req.header('X-Forwarded-Proto') == 'https') 
-		next(); 
-	else 
-		res.redirect('https://' + req.host + req.url); 
-});
 
 
 

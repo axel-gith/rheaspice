@@ -1,7 +1,6 @@
 const middlewareObject = {},
 	  Comment = require("../models/comment");
 
-
 middlewareObject.isLoggedIn = function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
 		return next();
