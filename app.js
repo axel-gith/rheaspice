@@ -51,7 +51,7 @@ passport.use(new localStrategy(User.authenticate()));
 //facebook
 passport.use(new facebookStrategy({
 	clientID: 2240804512668292,
-	clientSecret: process.env.APPSECRET,
+	clientSecret: process.env.FBAPPSECRET,
 	callbackURL: "https://rhea-test.run.goorm.io/facebook/return"
 },
 	function(accessToken, refreshToken, profile, cb) {
@@ -77,6 +77,6 @@ app.use("/products", productRoutes);
 		
 		
 
-app.listen(3000, process.env.IP, function(){
+app.listen(process.env.PORT, process.env.IP, function(){
 	console.log("Rhes's servers are up and running");
 });
