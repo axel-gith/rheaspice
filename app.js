@@ -1,5 +1,6 @@
 	  require('dotenv').config();
-const express	   = require("express"),
+const sslRedirect = require("heroku-ssl-redirect"),
+      express	   = require("express"),
 	  environment  = process.env.NODE_ENV || "development",
 	  expressSanitizer = require("express-sanitizer"),
 	  app 	   = express(),
@@ -30,7 +31,7 @@ const commentRoutes = require("./routes/comments"),
 // if (environment === 'production') {
 //     app.use(forceSSL);
 // }
-
+app.use(sslRedirect());
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
