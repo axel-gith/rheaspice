@@ -26,7 +26,7 @@ const forseSSL = function(req, res, next){
 	return next();
 };
 
-if (env === 'production') {
+if (environment === 'production') {
     app.use(forceSSL);
 }
 
