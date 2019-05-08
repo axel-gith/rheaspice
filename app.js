@@ -20,14 +20,15 @@ const commentRoutes = require("./routes/comments"),
 	  indexRoutes = require("./routes/index");
 
 const forceSSL = function(req, res, next){
-	
+	console.log(req.get("Host") +"  " +  req.url);
+	if(req.headers["x-forwarded-proto"] !== "https"){
+		return res.redirect(["https://", req.get("Host"), req.url].join());
+	}
 	return next();
 };
 
 if (environment === 'production') {
-	if(req.headers["x-forwarded-proto"] !== "https"){
-		return res.redirect(["https://", req.get("Host"), req.url].join());
-	}
+    app.use(forceSSL);
 }
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
