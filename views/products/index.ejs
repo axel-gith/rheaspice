@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<header class="jumbotron">
+		<div class="container">
+			<h1>This is the products page</h1>
+			<p>The best products of the known multiverse</p>
+			<p>
+				<a href="/products/new" class="btn btn-primary btn-lg">Add a new Product</a>
+			</p>
+		</div>
+	</header>
+	<div class="row" id="indexRow">
+		<% products.forEach(function(product){ %>
+			<div class="col-md-3 col-sm-6">
+				<div class="thumbnail">
+					<img src="<%= product.image %>">
+					<div class="caption">
+						<h4><%= product.name %></h4>
+					</div>
+					<a class="btn btn-warning" href="/products/<%= product._id %>">Info</a>
+				</div>	
+			</div>
+		<% }) %>
+	</div>
+</div>
+
+<% include ../partials/footer %>

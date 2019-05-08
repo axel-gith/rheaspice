@@ -1,0 +1,52 @@
+#indexRow {
+	display: flex;
+	flex-wrap: wrap;	
+}
+
+.thumbnail img{
+	width: 100%;
+	max-width: 200px;
+}
+
+.thumbnail {
+	padding: 0;
+}
+
+.thumbnail img {
+	margin-left: auto;
+	margin-right:auto;
+	display: block
+}
+
+.thumbnail .caption-full{
+	padding: 9px;
+}
+
+hr {
+	padding: 3px;
+}
+
+#addCart {
+	display: inline-block;
+}
+
+.new {
+	text-align: center;
+}
+
+.newForm {
+	width: 30%;
+	margin: 30px auto;
+}
+
+i {
+	padding-top: 13px;
+}
+
+.delete_btn{
+	display: inline;
+}
+
+nav{
+	margin-bottom: 25px;
+}

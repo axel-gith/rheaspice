@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Rhea's Spices</title>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/stylesheet/main.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/">Rhes's Spice</a>
+				</div>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    				<span class="navbar-toggler-icon"></span>
+  				</button>
+				<div class="collapse navbar-collapse" id="navbarText">
+					<ul class="nav navbar-nav ml-auto">
+						<li class="nav-item"><a href="/cart"><i class="nav-link fas fa-shopping-cart"></i></a></li>
+						<% if(!currentUser){ %>
+						<li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+						<li class="nav-item"><a href="/register" class="nav-link">Sign up</a></li>
+						<% } else { %>
+						<li class="nav-item"><a href="/profile" class="nav-link">Welcome <%= currentUser.username %></a></li>
+						<li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+						<% } %>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<% if(error && error.length > 0){ %>
+				<div class="alert alert-danger" role="alert">
+					<%= error %>
+			    </div>
+			<% } %>
+			<% if(success && success.length > 0){ %>
+				<div class="alert alert-success" role="alert">
+					<%= success %>
+				</div>
+			<% } %>
+		</div>
+			
