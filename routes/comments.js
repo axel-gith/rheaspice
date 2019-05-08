@@ -3,12 +3,13 @@ const express = require("express"),
 	  Product = require("../models/product"),
 	  Comment = require("../models/comment"),
 	  middleware = require("../middleware");
+
 var timeOfCreation = new Date();
 
 //==================================================
 //COMMENT ROUTES
 //==================================================
-router.post("/",middleware.isLoggedIn, function(req, res){
+router.post("/", middleware.isHttps, middleware.isLoggedIn, function(req, res){
 	
 	Product.findById(req.params.id, function(err, foundProduct){
 		if(err || !foundProduct){
@@ -42,7 +43,7 @@ router.post("/",middleware.isLoggedIn, function(req, res){
 });
 
 //Edit form ROUTE
-router.get("/:comment_id/edit",middleware.checkCommentOwnership, function(req, res){
+router.get("/:comment_id/edit", middleware.isHttps, middleware.checkCommentOwnership, function(req, res){
 	Comment.findById(req.params.comment_id, function(err, foundComment){
 		if(err){
 			console.log("will eventualy handle the error20");
@@ -52,7 +53,7 @@ router.get("/:comment_id/edit",middleware.checkCommentOwnership, function(req, r
 	});
 });
 
-router.put("/:comment_id",middleware.checkCommentOwnership, function(req, res){
+router.put("/:comment_id", middleware.isHttps, middleware.checkCommentOwnership, function(req, res){
 	req.body.comment.text  = req.sanitize(req.body.comment.text);
 	Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
 		if(err){
@@ -65,7 +66,7 @@ router.put("/:comment_id",middleware.checkCommentOwnership, function(req, res){
 	});
 });
 
-router.delete("/:comment_id", middleware.checkCommentOwnership, function(req, res){
+router.delete("/:comment_id", middleware.isHttps, middleware.checkCommentOwnership, function(req, res){
 	Comment.findByIdAndRemove(req.params.comment_id, function(err){
 		if(err){
 			req.flash("error", "We are sorry, we weren't able to delete the comment, please try again");

@@ -1,19 +1,20 @@
 const express  = require("express"),
 	  router   = express.Router(),
 	  User 	   = require("../models/user"),
-	  passport = require("passport");	
+	  passport = require("passport"),
+	  middleware = require("../middleware");
 
 //==================================================
 //LANDING PAGE
 //==================================================
-router.get("/", function(req,res){
+router.get("/", middleware.isHttps, function(req,res){
 	res.render("landing.ejs");
 });
 
 //==================================================
 //PRIVACY PAGE
 //==================================================
-router.get("/privacy", function(req,res){
+router.get("/privacy",middleware.isHttps, function(req,res){
 	res.render("privacy");
 });
 
@@ -22,12 +23,12 @@ router.get("/privacy", function(req,res){
 //LOCAL AUTHENTICATION ROUTES
 //==================================================
 //Register form ROUTE
-router.get("/register", function(req, res){
+router.get("/register",middleware.isHttps, function(req, res){
 	res.render("register");
 });
 
 //Register post ROUTE
-router.post("/register", function(req,res){
+router.post("/register",middleware.isHttps, function(req,res){
 	var newUser = new User({username: req.body.username});
 	if(req.body.adminCode === process.env.ADMINCODE){
 		newUser.isAdmin = true;
@@ -45,12 +46,12 @@ router.post("/register", function(req,res){
 });
 
 //Login form ROUTE
-router.get("/login", function(req, res){
+router.get("/login",middleware.isHttps, function(req, res){
 	res.render("login");
 });
 
 //Login post ROUTE
-router.post("/login", passport.authenticate("local",{
+router.post("/login",middleware.isHttps, passport.authenticate("local",{
 	successRedirect: "/products",
 	successFlash: "Welcome to Rhea's ",
 	failureRedirect: "/login", 
@@ -61,14 +62,14 @@ router.post("/login", passport.authenticate("local",{
 //==================================================
 //FACEBOOK AUTHENTICATION ROUTES
 //==================================================
-router.get("/facebook", passport.authenticate("facebook"));
+router.get("/facebook",middleware.isHttps, passport.authenticate("facebook"));
 
 router.get("/facebook/return", passport.authenticate("facebook",{ failureRedirect: "/login"}), function(req, res){
 	res.redirect("/products");
 });
 
 //Logout ROUTE
-router.get("/logout", function(req, res){
+router.get("/logout",middleware.isHttps, function(req, res){
 	var name = req.user.username;
 	req.logout();
 	req.flash("success", "Log Out successfull. We hope to see you soon " + name);

@@ -73,12 +73,6 @@ app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
 
-app.use('*',function(req,res,next){
-  if(req.headers['X-Forwarded-Proto']!='https')
-    res.redirect('https://rheaspice.com'+req.url);
-  else
-    next(); /* Continue to other routes if we're not redirecting */
-});
 		
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
