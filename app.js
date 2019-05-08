@@ -62,7 +62,7 @@ passport.use(new localStrategy(User.authenticate()));
 passport.use(new facebookStrategy({
 	clientID: 1100246720160183,
 	clientSecret: process.env.FBAPPSECRET,
-	callbackURL: "https://rhea-test.run.goorm.io/facebook/return"
+	callbackURL: "https://rheaspice.com/facebook/return"
 },
 	function(accessToken, refreshToken, profile, cb) {
 	User.findOrCreate({facebookId: profile.id}, function(err, user){
