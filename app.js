@@ -1,5 +1,6 @@
 	  require('dotenv').config();
 const express	   = require("express"),
+	  environment  = process.env.NODE_ENV || "development",
 	  expressSanitizer = require("express-sanitizer"),
 	  app 	   = express(),
       bodyParser = require("body-parser"),
@@ -17,6 +18,17 @@ const express	   = require("express"),
 const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
+
+const forseSSL = function(req, res, next){
+	if(req.headers["x-forwarded-proto"] !== "https"){
+		return res.redirect(["https://", req.get("Host"), req.url].join());
+	}
+	return next();
+};
+
+if (env === 'production') {
+    app.use(forceSSL);
+}
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
