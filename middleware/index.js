@@ -45,11 +45,4 @@ middlewareObject.checkCommentOwnership = function checkCommentOwnership(req, res
 	}
 };
 
-middlewareObject.isHttps = function(req,res,next){
-  if(req.headers['X-Forwarded-Proto']!='https')
-    res.redirect('https://'+ req.header("host") + req.url);
-  else
-    next(); /* Continue to other routes if we're not redirecting */
-};
-
 module.exports = middlewareObject;

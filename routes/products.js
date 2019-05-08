@@ -9,7 +9,7 @@ const express = require("express"),
 //==================================================
 
 //Products page ROUTE
-router.get("/",middleware.isHttps,  function(req, res){
+router.get("/", function(req, res){
 	Product.find({}, function(err, allProducts){
 		if(err){
 			console.log("will eventualy handle the error1");
@@ -20,12 +20,12 @@ router.get("/",middleware.isHttps,  function(req, res){
 });
 
 //New product form ROUTE
-router.get("/new",middleware.isHttps, middleware.isAdmin, function(req, res){
+router.get("/new",middleware.isAdmin, function(req, res){
 	res.render("products/new");
 });
 
 //Product show page ROUTE
-router.get("/:id",middleware.isHttps,  function(req, res){
+router.get("/:id", function(req, res){
 	Product.findById(req.params.id).populate("comments").exec(function(err, foundProduct){
 		if(err){
 			console.log("will eventualy handle the error2");
@@ -36,7 +36,7 @@ router.get("/:id",middleware.isHttps,  function(req, res){
 });
 
 //New product Post ROUTE
-router.post("/",middleware.isHttps, middleware.isAdmin, function(req, res){
+router.post("/",middleware.isAdmin, function(req, res){
 	Product.create(req.body.product, function(err, product){
 		if(err){
 			req.flash("error", "We weren't able to post the new product, please try again");
@@ -48,7 +48,7 @@ router.post("/",middleware.isHttps, middleware.isAdmin, function(req, res){
 });
 
 //Edit product form ROUTE
-router.get("/:id/edit",middleware.isHttps, middleware.isAdmin, function(req, res){
+router.get("/:id/edit",middleware.isAdmin, function(req, res){
 	Product.findById(req.params.id, function(err, foundProduct){
 		if(err){
 			console.log("will eventualy handle the error10");
@@ -58,7 +58,7 @@ router.get("/:id/edit",middleware.isHttps, middleware.isAdmin, function(req, res
 });
 
 //Edit product put ROUTE
-router.put("/:id",middleware.isHttps, middleware.isAdmin, function(req, res){
+router.put("/:id",middleware.isAdmin, function(req, res){
 	Product.findByIdAndUpdate(req.params.id, req.body.product, function(err, updatedProduct){
 		if(err){
 			req.flash("error", "We weren't able to edit the product, please try again");
@@ -71,7 +71,7 @@ router.put("/:id",middleware.isHttps, middleware.isAdmin, function(req, res){
 });
 
 //Destroy product ROUTE
-router.delete("/:id",middleware.isHttps,  middleware.isAdmin, function(req,res){
+router.delete("/:id", middleware.isAdmin, function(req,res){
 	Product.findByIdAndRemove(req.params.id, function(err, removedProduct){
 		if(err){
 			req.flash("error", "Something went wrong while deleting the product, please try again");

@@ -73,7 +73,15 @@ app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
 
-		
+app.use(function(req, res, next) { 
+	if (req.header('X-Forwarded-Proto') == 'https') 
+		next(); 
+	else 
+		res.redirect('https://' + req.host + req.url); 
+});
+
+
+
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");
