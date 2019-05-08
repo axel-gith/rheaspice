@@ -60,7 +60,7 @@ app.use(function(req,res, next){ //Global middleware so i can access the user ev
 passport.use(new localStrategy(User.authenticate()));
 //facebook
 passport.use(new facebookStrategy({
-	clientID: 2240804512668292,
+	clientID: 1100246720160183,
 	clientSecret: process.env.FBAPPSECRET,
 	callbackURL: "https://rhea-test.run.goorm.io/facebook/return"
 },
