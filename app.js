@@ -2,6 +2,8 @@
 const express	   = require("express"),
 	  environment  = process.env.NODE_ENV || "development",
 	  expressSanitizer = require("express-sanitizer"),
+	  http 	    = require("http"),
+	  enforce	= require("express-sslify"),
 	  app 	   = express(),
       bodyParser = require("body-parser"),
 	  mongoose   = require("mongoose"),
@@ -19,17 +21,6 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
 
-// const forceSSL = function(req, res, next){
-// 	console.log(req.get("Host") +"  " +  req.url);
-// 	if(req.headers["x-forwarded-proto"] !== "https"){
-// 		return res.redirect(["https://", req.get("Host"), req.url].join());
-// 	}
-// 	return next();
-// };
-
-// if (environment === 'production') {
-//     app.use(forceSSL);
-// }
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
@@ -38,6 +29,7 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended : "true"}));
 app.use(expressSanitizer());
 app.use(methodOverride("_method"));
+
 
 //===============
 //PASSPORT CONFIGURATION
@@ -77,10 +69,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-
-
-
-
 //========================================
 //ROUTES CONFIG
 //========================================
@@ -88,13 +76,17 @@ app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
 		
-		
-if(environment === 'production'){
-	app.listen(process.env.PORT, process.env.IP, function(){
-		console.log("Rhes's servers are up and running");
-	});
-} else {
-	app.listen(3000, process.env.IP, function(){
-		console.log("Rhes's servers are up and running");
-	});
-}
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
+ 
+http.createServer(app).listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + app.get('port'));
+});		
+// if(environment === 'production'){
+// 	app.listen(process.env.PORT, process.env.IP, function(){
+// 		console.log("Rhes's servers are up and running");
+// 	});
+// } else {
+// 	app.listen(3000, process.env.IP, function(){
+// 		console.log("Rhes's servers are up and running");
+// 	});
+// }
