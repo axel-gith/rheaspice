@@ -19,17 +19,17 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
 
-const forceSSL = function(req, res, next){
-	console.log(req.get("Host") +"  " +  req.url);
-	if(req.headers["x-forwarded-proto"] !== "https"){
-		return res.redirect(["https://", req.get("Host"), req.url].join());
-	}
-	return next();
-};
+// const forceSSL = function(req, res, next){
+// 	console.log(req.get("Host") +"  " +  req.url);
+// 	if(req.headers["x-forwarded-proto"] !== "https"){
+// 		return res.redirect(["https://", req.get("Host"), req.url].join());
+// 	}
+// 	return next();
+// };
 
-if (environment === 'production') {
-    app.use(forceSSL);
-}
+// if (environment === 'production') {
+//     app.use(forceSSL);
+// }
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
