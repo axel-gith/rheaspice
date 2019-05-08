@@ -19,7 +19,7 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
 
-const forseSSL = function(req, res, next){
+const forceSSL = function(req, res, next){
 	if(req.headers["x-forwarded-proto"] !== "https"){
 		return res.redirect(["https://", req.get("Host"), req.url].join());
 	}
@@ -88,7 +88,12 @@ app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
 		
 		
-
-app.listen(process.env.PORT, process.env.IP, function(){
-	console.log("Rhes's servers are up and running");
-});
+if(environment === 'production'){
+	app.listen(process.env.PORT, process.env.IP, function(){
+		console.log("Rhes's servers are up and running");
+	});
+} else {
+	app.listen(3000, process.env.IP, function(){
+		console.log("Rhes's servers are up and running");
+	});
+}
