@@ -19,17 +19,6 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
 
-// const forceSSL = function(req, res, next){
-// 	console.log(req.get("Host") +"  " +  req.url);
-// 	if(req.headers["x-forwarded-proto"] !== "https"){
-// 		return res.redirect(["https://", req.get("Host"), req.url].join());
-// 	}
-// 	return next();
-// };
-
-// if (environment === 'production') {
-//     app.use(forceSSL);
-// }
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
@@ -77,17 +66,19 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-
-
-
-
 //========================================
 //ROUTES CONFIG
 //========================================
 app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
-		
+
+app.use('*',function(req,res,next){
+  if(req.headers['X-Forwarded-Proto']!='https')
+    res.redirect('https://rheaspice.com'+req.url);
+  else
+    next(); /* Continue to other routes if we're not redirecting */
+});
 		
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
