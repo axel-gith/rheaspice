@@ -22,7 +22,7 @@ var i = 0;
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.enable('trust proxy');
-app.use(function(req, res, next){ console.log(i + req.protocol); i++;
+app.use(function(req, res, next){ console.log(i + req.protocol ); i++; if(req.protocol === "https")console.log("  true");
 	if(req.protocol === "https"){
 		next();
 	} else {
