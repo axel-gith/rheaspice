@@ -56,16 +56,21 @@ router.post("/login", passport.authenticate("local",{
 	failureRedirect: "/login", 
 	failureFlash: "Invalid username or password"
 }), function(req, res){
-});
+	});
 
 //==================================================
 //FACEBOOK AUTHENTICATION ROUTES
 //==================================================
-router.get("/facebook", passport.authenticate("facebook"));
+router.get('/login/facebook',
+  passport.authenticate('facebook'));
 
-router.get("/facebook/return", passport.authenticate("facebook",{ failureRedirect: "/login"}), function(req, res){
-	res.redirect("/products");
-});
+router.get('/return', passport.authenticate('facebook', {
+	failureRedirect: '/login',
+	failureFlash: "Unable to login with Facebook, please try again or use another method",
+	successRedirect: "/products",
+	successFlash: "Welcome to Rhea's "
+}), function(req, res) {
+  	});
 
 //Logout ROUTE
 router.get("/logout", function(req, res){
