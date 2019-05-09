@@ -18,11 +18,11 @@ const express	   = require("express"),
 const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
-
+var i = 0;
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.enable('trust proxy');
-app.use(function(req, res, next){ console.log(req.protocol);
+app.use(function(req, res, next){ console.log(i + req.protocol); i++;
 	if(req.protocol === "https"){
 		next();
 	} else {
