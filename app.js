@@ -34,7 +34,7 @@ app.use(function(req, res, next){
 		var secureUrl = "https://" + req.hostname + req.url;
 		res.writeHead(301,{"Location" : secureUrl});
 		return;
-	}
+	} else
 	next();
 });
 

@@ -70,6 +70,7 @@ router.post('/return', passport.authenticate('facebook', {
 	successRedirect: "/products",
 	successFlash: "Welcome to Rhea's "
 }), function(req, res) {
+		return;
   	});
 
 //Logout ROUTE
