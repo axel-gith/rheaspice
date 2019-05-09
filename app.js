@@ -93,9 +93,9 @@ app.use("/products", productRoutes);
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");
-	}); return;
+	});
 } else {
 	app.listen(3000, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");
-	}); return;
+	});
 }
