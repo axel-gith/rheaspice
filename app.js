@@ -22,13 +22,22 @@ var i = 0;
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 app.enable('trust proxy');
-app.use(function(req, res, next){ console.log(i + req.protocol ); i++; if(req.protocol === "https")console.log("  true");
-	if(req.protocol === "https"){
-		next();
-	} else {
-		res.redirect("https://" + req.hostname + req.url);
+// app.use(function(req, res, next){ console.log(i + req.protocol ); i++; if(req.protocol === "https")console.log("  true");
+// 	if(req.protocol === "https"){
+// 		next();
+// 	} else {
+// 		res.redirect("https://" + req.hostname + req.url);
+// 	}
+// });
+app.use(function(req, res, next){
+	if(req.protocol !== "https" && environment == "production"){
+		var secureUrl = "https://" + req.hostname + req.url;
+		res.writeHead(301,{"Location" : secureUrl});
+		res.end();
 	}
+	next();
 });
+
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
 app.use(express.static(__dirname + "/public"));
