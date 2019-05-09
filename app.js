@@ -33,7 +33,7 @@ app.use(function(req, res, next){
 	if(req.protocol !== "https" && environment == "production"){
 		var secureUrl = "https://" + req.hostname + req.url;
 		res.writeHead(301,{"Location" : secureUrl});
-		res.end();
+		return;
 	}
 	next();
 });
@@ -74,9 +74,7 @@ passport.use(new facebookStrategy({
 	callbackURL: "https://rheaspice.com/return"
 },
 	function(accessToken, refreshToken, profile, cb) {
-	User.findOrCreate({facebookId: profile.id}, function(err, user){
-		return cb(err, user);
-	});
+		return cb(null, profile);
 }));
 
 passport.serializeUser(User.serializeUser());
@@ -95,9 +93,9 @@ app.use("/products", productRoutes);
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");
-	});
+	}); return;
 } else {
 	app.listen(3000, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");
-	});
+	}); return;
 }
