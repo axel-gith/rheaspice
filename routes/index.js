@@ -36,7 +36,7 @@ router.post("/register", function(req,res){
 		if(err){
 			console.log("will eventualy handle the error6");
 		} else {
-				passport.authenticate("local")(req, res, function(){
+			passport.authenticate("local")(req, res, function(){
 				req.flash("success", "Welcome back " + user.username);
 				res.redirect("/products");
 			});
@@ -70,6 +70,7 @@ router.get('/return', passport.authenticate('facebook', {
 	successRedirect: "/products",
 	successFlash: "Welcome to Rhea's "
 }), function(req, res) {
+		return;
   	});
 
 //Logout ROUTE
