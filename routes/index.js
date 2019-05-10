@@ -64,7 +64,7 @@ router.post("/login", passport.authenticate("local",{
 router.get('/login/facebook',
   passport.authenticate('facebook'));
 
-router.get('/return', passport.authenticate('facebook', {
+router.get('/auth/facebook/return', passport.authenticate('facebook', {
 	failureRedirect: '/login',
 	failureFlash: "Unable to login with Facebook, please try again or use another method",
 	successRedirect: "/products",
@@ -72,6 +72,24 @@ router.get('/return', passport.authenticate('facebook', {
 }), function(req, res) {
 		return;
   	});
+
+//==================================================
+//GOOGLE AUTHENTICATION ROUTES
+//==================================================
+router.get("/login/google", passport.authenticate("google", { scope: ['profile'] }));
+
+router.get("/auth/google/return", 
+	// passport.authenticate('google', { 
+	// 	failureRedirect: '/login',
+	// 	failureFlash: "Unable to login with Google, please try again or use another method"
+	// }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    //res.redirect('/');
+	res.send("retun page");
+  });
+
+
 
 //Logout ROUTE
 router.get("/logout", function(req, res){

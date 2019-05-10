@@ -11,6 +11,7 @@ const express	   = require("express"),
 	  passport   = require("passport"),
 	  methodOverride = require("method-override"),
 	  flash		 = require("connect-flash"),
+	  googleStrategy = require("passport-google-oauth20").Strategy,
 	  facebookStrategy = require("passport-facebook").Strategy,
 	  localStrategy = require("passport-local");
 
@@ -20,22 +21,25 @@ const commentRoutes = require("./routes/comments"),
 	  indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
-// app.enable('trust proxy');
-// app.use(function(req, res, next){ console.log(i + req.protocol ); i++; if(req.protocol === "https")console.log("  true");
-// 	if(req.protocol === "https"){
-// 		next();
-// 	} else {
-// 		res.redirect("https://" + req.hostname + req.url);
-// 	}
+if(environment === "production"){
+	app.enable('trust proxy');
+	app.use(function(req, res, next){ 
+		if(req.protocol === "https"){
+			next();
+		} else {
+			res.redirect("https://" + req.hostname + req.url);
+		}
+	});
+}
+
+// app.use(function(req, res, next){
+// 	if(req.protocol !== "https" && environment == "production"){
+// 		var secureUrl = "https://" + req.hostname + req.url;
+// 		res.writeHead(301,{"Location" : secureUrl});
+// 		return;
+// 	} else
+// 	next();
 // });
-app.use(function(req, res, next){
-	if(req.protocol !== "https" && environment == "production"){
-		var secureUrl = "https://" + req.hostname + req.url;
-		res.writeHead(301,{"Location" : secureUrl});
-		return;
-	} else
-	next();
-});
 
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
@@ -66,15 +70,29 @@ app.use(function(req,res, next){ //Global middleware so i can access the user ev
 //========================================
 //local
 passport.use(new localStrategy(User.authenticate()));
+
 //facebook
 passport.use(new facebookStrategy({
 	clientID: 1100246720160183,
 	clientSecret: process.env.FBAPPSECRET,
-	callbackURL: "https://rheaspice.com/return"
+	callbackURL: "https://rheaspice.com/auth/facebook/return"
 },
 	function(accessToken, refreshToken, profile, cb) {
 		return cb(null, profile);
 }));
+
+//google
+passport.use(new googleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "https://www.rheaspice.com/auth/google/return"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
