@@ -20,8 +20,11 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  indexRoutes = require("./routes/index");
 
+var facebookCallBack = "https://rhea-test.run.groom.io/auth/facebook/return";
+
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 if(environment === "production"){
+	facebookCallBack = "https://rheaspice.com/auth/facebook/return";
 	app.enable('trust proxy');
 	app.use(function(req, res, next){ 
 		if(req.protocol === "https"){
@@ -32,14 +35,6 @@ if(environment === "production"){
 	});
 }
 
-// app.use(function(req, res, next){
-// 	if(req.protocol !== "https" && environment == "production"){
-// 		var secureUrl = "https://" + req.hostname + req.url;
-// 		res.writeHead(301,{"Location" : secureUrl});
-// 		return;
-// 	} else
-// 	next();
-// });
 
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
@@ -75,9 +70,10 @@ passport.use(new localStrategy(User.authenticate()));
 passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
-	callbackURL: "https://rheaspice.com/auth/facebook/return"
+	callbackURL: facebookCallBack
   },
 	function(accessToken, refreshToken, profile, done) {
+		console.log("profile");
 		User.findOne({facebookId: profile.id}).then((currentUser)=>{
 			if(currentUser){
 				console.log("user is " + currentUser.username);

@@ -61,13 +61,13 @@ router.post("/login", passport.authenticate("local",{
 //==================================================
 //FACEBOOK AUTHENTICATION ROUTES
 //==================================================
-router.get('/login/facebook',
-  passport.authenticate('facebook'));
+router.get('/login/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/facebook/return', passport.authenticate('facebook', {
-	failureRedirect: '/login',
-	failureFlash: "Unable to login with Facebook, please try again or use another method",
-}), function(req, res) {
+		failureRedirect: '/login',
+		failureFlash: "Unable to login with Facebook, please try again or use another method",
+	}), 
+	function(req, res) {
 		res.redirect('/products');
   	}
 );
