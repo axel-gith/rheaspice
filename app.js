@@ -70,8 +70,7 @@ passport.use(new localStrategy(User.authenticate()));
 passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
-	callbackURL: facebookCallBack,
-	proxy: true
+	callbackURL: facebookCallBack
   },
 	function(accessToken, refreshToken, profile, done) {
 		console.log("profile");

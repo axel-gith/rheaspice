@@ -64,6 +64,7 @@ router.post("/login", passport.authenticate("local",{
 router.get('/login/facebook', passport.authenticate('facebook'));
 
 router.get('/auth/facebook/return', passport.authenticate('facebook', {
+		successRedirect: "/products",
 		failureRedirect: '/login',
 		failureFlash: "Unable to login with Facebook, please try again or use another method",
 	}), 
