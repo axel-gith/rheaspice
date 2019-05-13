@@ -67,8 +67,6 @@ router.get('/login/facebook',
 router.get('/auth/facebook/return', passport.authenticate('facebook', {
 	failureRedirect: '/login',
 	failureFlash: "Unable to login with Facebook, please try again or use another method",
-	successRedirect: "/products",
-	successFlash: "Welcome to Rhea's "
 }), function(req, res) {
 		res.redirect('/products');
   	}

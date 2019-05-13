@@ -77,7 +77,7 @@ passport.use(new facebookStrategy({
 	clientSecret: process.env.FB_APP_SECRET,
 	callbackURL: "https://rheaspice.com/auth/facebook/return"
   },
-	function(accessToken, refreshToken, profile, cb) {
+	function(accessToken, refreshToken, profile, done) {
 		User.findOne({facebookId: profile.id}).then((currentUser)=>{
 			if(currentUser){
 				console.log("user is " + currentUser.username);
