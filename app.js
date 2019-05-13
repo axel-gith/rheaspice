@@ -73,13 +73,27 @@ passport.use(new localStrategy(User.authenticate()));
 
 //facebook
 passport.use(new facebookStrategy({
-	clientID: 1100246720160183,
-	clientSecret: process.env.FBAPPSECRET,
+	clientID: process.env.FB_CLIENT_ID,
+	clientSecret: process.env.FB_APP_SECRET,
 	callbackURL: "https://rheaspice.com/auth/facebook/return"
-},
+  },
 	function(accessToken, refreshToken, profile, cb) {
-		return cb(null, profile);
-}));
+		User.findOne({facebookId: profile.id}).then((currentUser)=>{
+			if(currentUser){
+				console.log("user is " + currentUser.username);
+				done(null, currentUser);
+			} else {
+				new User ({
+					facebookId: profile.id,
+					username: profile.displayName
+				}).save().then((newUser)=>{
+				console.log("new user created " + newUser);
+					done(null, newUser);
+				});
+			}
+		});	
+	}
+));
 
 //google
 passport.use(new googleStrategy({
@@ -87,15 +101,32 @@ passport.use(new googleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "https://www.rheaspice.com/auth/google/return"
   },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
+  	function(accessToken, refreshToken, profile, done) {
+		User.findOne({googleId: profile.id}).then((currentUser)=>{
+			if(currentUser){
+				console.log("user is " + currentUser.username);
+				done(null, currentUser);
+			} else {
+				new User ({
+					googleId: profile.id,
+					username: profile.displayName
+				}).save().then((newUser)=>{
+				console.log("new user created " + newUser);
+					done(null, newUser);
+				});
+			}
+		});	
+	}
 ));
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(function(user, done){
+	done(null,user._id);
+});
+passport.deserializeUser(function(id, done){
+	User.findById(id).then(function(user){
+		done(null, user);
+	});
+});
 
 
 //========================================

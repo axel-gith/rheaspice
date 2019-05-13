@@ -70,24 +70,24 @@ router.get('/auth/facebook/return', passport.authenticate('facebook', {
 	successRedirect: "/products",
 	successFlash: "Welcome to Rhea's "
 }), function(req, res) {
-		return;
-  	});
+		res.redirect('/products');
+  	}
+);
 
 //==================================================
 //GOOGLE AUTHENTICATION ROUTES
 //==================================================
 router.get("/login/google", passport.authenticate("google", { scope: ['profile'] }));
 
-router.get("/auth/google/return", 
-	// passport.authenticate('google', { 
-	// 	failureRedirect: '/login',
-	// 	failureFlash: "Unable to login with Google, please try again or use another method"
-	// }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    //res.redirect('/');
-	res.send("retun page");
-  });
+router.get("/auth/google/return", passport.authenticate('google', { 
+		failureRedirect: '/login',
+		failureFlash: "Unable to login with Google, please try again or use another method"
+	}),
+  	function(req, res) {
+		// Successful authentication, redirect home.
+		res.redirect('/products');
+  	}	
+);
 
 
 

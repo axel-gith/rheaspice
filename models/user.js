@@ -4,6 +4,8 @@ const mongoose = require("mongoose"),
 var userSchema = new mongoose.Schema({
 	username: String,
 	password: String,
+	googleId: String,
+	facebookId: String,
 	isAdmin: {type: Boolean, default: false }
 });
 
