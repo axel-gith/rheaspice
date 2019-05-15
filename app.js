@@ -12,7 +12,7 @@ const express	   = require("express"),
 	  methodOverride = require("method-override"),
 	  flash		 = require("connect-flash"),
 	  googleStrategy = require("passport-google-oauth20").Strategy,
-	  facebookStrategy = require("passport-facebook").Strategy,
+	  //facebookStrategy = require("passport-facebook").Strategy,
 	  localStrategy = require("passport-local");
 
 //ROUTE cosntants
@@ -32,14 +32,6 @@ if(environment === "production"){
 	});
 }
 
-// app.use(function(req, res, next){
-// 	if(req.protocol !== "https" && environment == "production"){
-// 		var secureUrl = "https://" + req.hostname + req.url;
-// 		res.writeHead(301,{"Location" : secureUrl});
-// 		return;
-// 	} else
-// 	next();
-// });
 
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
@@ -72,28 +64,28 @@ app.use(function(req,res, next){ //Global middleware so i can access the user ev
 passport.use(new localStrategy(User.authenticate()));
 
 //facebook
-passport.use(new facebookStrategy({
-	clientID: process.env.FB_CLIENT_ID,
-	clientSecret: process.env.FB_APP_SECRET,
-	callbackURL: "https://rheaspice.com/auth/facebook/return"
-  },
-	function(accessToken, refreshToken, profile, done) {
-		User.findOne({facebookId: profile.id}).then((currentUser)=>{
-			if(currentUser){
-				console.log("user is " + currentUser.username);
-				done(null, currentUser);
-			} else {
-				new User ({
-					facebookId: profile.id,
-					username: profile.displayName
-				}).save().then((newUser)=>{
-				console.log("new user created " + newUser);
-					done(null, newUser);
-				});
-			}
-		});	
-	}
-));
+// passport.use(new facebookStrategy({
+// 	clientID: process.env.FB_CLIENT_ID,
+// 	clientSecret: process.env.FB_APP_SECRET,
+// 	callbackURL: "https://rheaspice.com/auth/facebook/return"
+//   },
+// 	function(accessToken, refreshToken, profile, done) {
+// 		User.findOne({facebookId: profile.id}).then((currentUser)=>{
+// 			if(currentUser){
+// 				console.log("user is " + currentUser.username);
+// 				done(null, currentUser);
+// 			} else {
+// 				new User ({
+// 					facebookId: profile.id,
+// 					username: profile.displayName
+// 				}).save().then((newUser)=>{
+// 				console.log("new user created " + newUser);
+// 					done(null, newUser);
+// 				});
+// 			}
+// 		});	
+// 	}
+// ));
 
 //google
 passport.use(new googleStrategy({
