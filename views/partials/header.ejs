@@ -6,6 +6,22 @@
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 		<link href="/stylesheet/main.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+		<script>
+			// Test for the ugliness.
+		<%	console.log("This is w.l.h " + window.location.hash); %>
+		if (window.location.hash === "#_=_"){
+			// Check if the browser supports history.replaceState.
+			if (history.replaceState) {
+				// Keep the exact URL up to the hash.
+				var cleanHref = window.location.href.split("#")[0];
+				// Replace the URL in the address bar without messing with the back button.
+				history.replaceState(null, null, cleanHref);
+			} else {
+				// Well, you're on an old browser, we can get rid of the _=_ but not the #.
+				window.location.hash = "";
+			}
+		}
+		</script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
