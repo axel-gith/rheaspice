@@ -1,0 +1,20 @@
+<%include ../partials/header.ejs%>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Recipe page</h1>
+		<% if(currentUser && currentUser.isAdmin == true){ %>
+        <a href="/recipes/new" class="btn btn-primary">Add new recipe</a>
+		<% } %>
+    </div>
+    <%recipes.forEach(function(recipe){%>
+    <div class="card">
+            <h3><%= recipe.name %></h3>
+            <div class="image">
+                <img src="<%=recipe.image%>">
+            </div>
+            <p><%=recipe.guide.substring(0,100)%>...</p>
+        <% }) %>
+    </div>
+</div>
+
+<%include ../partials/footer%>

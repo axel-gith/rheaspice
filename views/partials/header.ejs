@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+	<!--	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
 			<div class="container">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="/">Rhes's Spice</a>
@@ -28,6 +28,28 @@
 						<% } %>
 					</ul>
 				</div>
+			</div>
+		</nav> -->
+		
+		<nav class="navbar navbar-dark navbar-expand-lg">
+			<div class="container"><a href="/" class="navbar-brand text-white">Rhes's Spice</a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler">
+			<span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        		<div class="collapse navbar-collapse" id="navcol-1">
+            <ul class="nav navbar-nav">
+                <li role="presentation" class="nav-item"><a href="/products" class="nav-link text-white active">STORE</a></li>
+                <li role="presentation" class="nav-item"><a href="/blog" class="nav-link text-white">BLOG</a></li>
+                <li role="presentation" class="nav-item"><a href="/recipes" class="nav-link text-white">RICETTE</a></li>
+            </ul>
+					<div class="ml-auto">
+						<% if(!currentUser){ %>
+							<a class="btn btn-light action-button" role="button" href="/login">ACCEDI</a>
+							<a class="btn btn-light action-button" role="button" href="/register">ISCRIVITI</a>
+						<% } else { %>
+							<a class="btn btn-light action-button" role="button" href="/register">LOGOUT</a>
+						<% } %>
+					</div>
+					</div>
+            
 			</div>
 		</nav>
 		

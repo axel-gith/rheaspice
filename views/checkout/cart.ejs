@@ -1,0 +1,18 @@
+<% include ../partials/header %>
+<div class="container">
+	<% var tot=0; if(currentUser.cart.length != 0){ currentUser.cart.forEach(function(product){ %>
+		<div class="photo-card">
+			<!--<div class="thumbnail">-->
+			<div class="photo-background" style="background-image:url("<%= product.image %>")">
+				<!--<div class="caption">-->
+				<div class="photo-details">
+					<h4><%= product.name %></h4>
+					<p><%= product.price %>€</p>
+				</div>
+			</div>	
+		</div>	
+	<% tot+= parseFloat(product.price) })} %>
+	<p>Totale: <%= tot.toFixed(2) %>€</p>
+</div>
+
+<% include ../partials/footer %>

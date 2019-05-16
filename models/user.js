@@ -6,7 +6,8 @@ var userSchema = new mongoose.Schema({
 	password: String,
 	googleId: String,
 	facebookId: String,
-	isAdmin: {type: Boolean, default: false }
+	isAdmin: {type: Boolean, default: false },
+	cart: []
 });
 
 userSchema.plugin(passportLocalMongoose);

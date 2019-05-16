@@ -1,0 +1,17 @@
+<%include ../partials/header.ejs%>
+<div class="container">
+    <div class="jumbotron">
+        <h1>Blog page</h1>
+    </div>
+    <%blogs.forEach(function(blog){%>
+    <div class="card">
+            <h3><%= blog.title %></h3>
+            <div class="image">
+                <img src="<%=blog.image%>">
+            </div>
+            <p><%=blog.body.substring(0,100)%>...</p>
+        <% }) %>
+    </div>
+</div>
+
+<%include ../partials/footer.ejs%>

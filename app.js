@@ -18,6 +18,8 @@ const express	   = require("express"),
 //ROUTE cosntants
 const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
+	  authenticationRoutes = require("./routes/authentication"),
+	  checkoutRoutes = require("./routes/checkout"),
 	  indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
@@ -127,9 +129,13 @@ passport.deserializeUser(function(id, done){
 app.use(indexRoutes);
 app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
+app.use(checkoutRoutes);
+app.use(authenticationRoutes);
 
 
-
+//========================================
+//SERVER START
+//========================================
 if(environment === 'production'){
 	app.listen(process.env.PORT, process.env.IP, function(){
 		console.log("Rhes's servers are up and running");

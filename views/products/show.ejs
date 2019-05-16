@@ -17,7 +17,10 @@
 						<h3><%= product.name %></h3>
 						<p><%= product.description %></p>
 						<h4><%= product.price %>€</h4>
-						<a href="#" class="btn btn-primary" id="addCart">Add to cart</a>
+						<form action="/cart/add/<%= product._id %>" method="POST">
+							<button class="btn btn-primary" id="addCart">Add to cart</button>
+						</form> 
+						
 					</div>
 					<% if(currentUser && currentUser.isAdmin === true){ %>
 						<a href="/products/<%= product._id %>/edit" class="btn btn-warning btn-sm">Edit</a>

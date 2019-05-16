@@ -10,19 +10,31 @@
 			</p>
 		</div>
 	</header>
-	<div class="row" id="indexRow">
-		<% products.forEach(function(product){ %>
-			<div class="col-md-3 col-sm-6">
-				<div class="thumbnail">
-					<img src="<%= product.image %>">
-					<div class="caption">
-						<h4><%= product.name %></h4>
-					</div>
-					<a class="btn btn-warning" href="/products/<%= product._id %>">Info</a>
-				</div>	
-			</div>
-		<% }) %>
-	</div>
+	<section>
+		<div class="row productRow">
+			<% products.forEach(function(product){ %>
+				<div class="col-md-3 col-sm-6">
+					<!--<div class="thumbnail">-->
+					<div class="card mb-4 box-shadow rounded-0">
+						<img class="card-img-top w-100 d-block rounded-0" src="<%= product.image %>">
+						<!--<div class="caption">-->
+						<div class="card-body">
+							<h4 class="card-title"><%= product.name %></h4>
+							<p class="card-text"><%= product.description.substring(0,50) %>...</p>
+						</div>
+						<a class="btn btn-danger card-link" href="/products/<%= product._id %>">Visualizza</a>
+					</div>	
+				</div>
+			<% }) %>
+		</div>
+	</section>
 </div>
 
+
+
+
+
+
+
+de
 <% include ../partials/footer %>

@@ -3,7 +3,7 @@ const express = require("express"),
 	  Product = require("../models/product"),
 	  Comment = require("../models/comment"),
 	  middleware = require("../middleware");
-var timeOfCreation = new Date();
+var   timeOfCreation = new Date();
 
 
 //==================================================
