@@ -71,3 +71,50 @@ border: none;
   padding:8px 20px;
   transition:background-color 0.25s;
 }
+
+nav{
+	margin-bottom:20px;
+}
+
+.login-dark {
+  max-width:320px;
+  width:90%;
+  background-color:#fff;
+  padding:30px; 
+  border-radius:4px;
+  margin: 0 auto 25px;
+  margin-top: 50px;
+  color:#fff;
+  box-shadow:3px 3px 4px rgba(0,0,0,0.2);
+	text-align:center;
+}
+
+.btn-dark{
+	background-color: rgb(211, 72, 54);
+	border-radius: 3px;
+	font-size:inherit;
+	padding:8px 20px;
+  transition:background-color 0.25s;
+	width: 100%;
+}
+
+.fa-user-lock{
+	color: #000;
+	padding-top: 0;
+}
+
+.fa-google{
+	padding: 0;
+}
+
+.login-dark .illustration {
+  text-align:center;
+  padding:5px 0 30px;
+  font-size:100px;
+  color:#2980ef;
+}
+
+
+
+
+
