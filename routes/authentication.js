@@ -13,21 +13,26 @@ router.get("/register", function(req, res){
 
 //Register post ROUTE
 router.post("/register", function(req,res){
-	var newUser = new User({username: req.body.username});
-	if(req.body.adminCode === process.env.ADMINCODE){
-		newUser.isAdmin = true;
-	}
-	User.register(newUser, req.body.password, function(err, user){
-		if(err){
-			req.flash("error", err.message);
-			res.redirect("back");
-		} else {
-			passport.authenticate("local")(req, res, function(){
-				req.flash("success", "Welcome back " + user.username);
-				res.redirect("/products");
-			});
+	if((User.findOne({email: req.body.email}))){
+		var newUser = new User({email: req.body.email, username: req.body.username});
+		if(req.body.adminCode === process.env.ADMINCODE){
+			newUser.isAdmin = true;
 		}
-	});
+		User.register(newUser, req.body.password, function(err, user){
+			if(err){
+				req.flash("error", err.message);
+				res.redirect("back");
+			} else {
+				passport.authenticate("local")(req, res, function(){
+					req.flash("success", "Welcome " + user.username);
+					res.redirect("/products");
+				});
+			}
+		});
+	} else {
+		req.flash("error", "L'email utilizzato è già associato ad un altro account. Prova a fare il login oppure registrati con un altro email");
+		res.redirect("/register");
+	}
 });
 
 //Login form ROUTE
