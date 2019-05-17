@@ -2,9 +2,11 @@
 const express	   = require("express"),
 	  environment  = process.env.NODE_ENV || "development",
 	  expressSanitizer = require("express-sanitizer"),
+	  session	= require("express-session"),
 	  app 	   = express(),
       bodyParser = require("body-parser"),
 	  mongoose   = require("mongoose"),
+	  mongoStore = require("connect-mongo")(session),
 	  Product	   = require("./models/product"),
 	  Comment    = require("./models/comment"),
 	  User       = require("./models/user"),
@@ -12,7 +14,7 @@ const express	   = require("express"),
 	  methodOverride = require("method-override"),
 	  flash		 = require("connect-flash"),
 	  googleStrategy = require("passport-google-oauth20").Strategy,
-	  //facebookStrategy = require("passport-facebook").Strategy,
+	  facebookStrategy = require("passport-facebook").Strategy,
 	  localStrategy = require("passport-local");
 
 //ROUTE cosntants
@@ -45,10 +47,14 @@ app.use(methodOverride("_method"));
 //===============
 //PASSPORT CONFIGURATION
 //===============
-app.use(require("express-session")({
+app.use(session({
 	secret: process.env.SESSIONSECRET,
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: false,
+	store: new mongoStore({
+		mongooseConnection: mongoose.connection,
+		ttl: 3 * 24 * 60 * 60 
+	})
 }));
 
 app.use(passport.initialize());
@@ -66,28 +72,30 @@ app.use(function(req,res, next){ //Global middleware so i can access the user ev
 passport.use(new localStrategy(User.authenticate()));
 
 //facebook
-// passport.use(new facebookStrategy({
-// 	clientID: process.env.FB_CLIENT_ID,
-// 	clientSecret: process.env.FB_APP_SECRET,
-// 	callbackURL: "https://rheaspice.com/auth/facebook/return"
-//   },
-// 	function(accessToken, refreshToken, profile, done) {
-// 		User.findOne({facebookId: profile.id}).then((currentUser)=>{
-// 			if(currentUser){
-// 				console.log("user is " + currentUser.username);
-// 				done(null, currentUser);
-// 			} else {
-// 				new User ({
-// 					facebookId: profile.id,
-// 					username: profile.displayName
-// 				}).save().then((newUser)=>{
-// 				console.log("new user created " + newUser);
-// 					done(null, newUser);
-// 				});
-// 			}
-// 		});	
-// 	}
-// ));
+passport.use(new facebookStrategy({
+	clientID: process.env.FB_CLIENT_ID,
+	clientSecret: process.env.FB_APP_SECRET,
+	callbackURL: "https://rheaspice.com/auth/facebook/return"
+  },
+	function(accessToken, refreshToken, profile, done) {
+		process.nextTick(function(){
+			User.findOne({facebookId: profile.id}).then((currentUser)=>{
+				if(currentUser){
+					console.log("user is " + currentUser.username);
+					done(null, currentUser);
+				} else {
+					new User ({
+						facebookId: profile.id,
+						username: profile.displayName
+					}).save().then((newUser)=>{
+					console.log("new user created " + newUser);
+						done(null, newUser);
+					});
+				}
+			});
+		});	
+	}
+));
 
 //google
 passport.use(new googleStrategy({
