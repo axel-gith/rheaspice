@@ -12,6 +12,7 @@ const express	   = require("express"),
 	  User       = require("./models/user"),
 	  passport   = require("passport"),
 	  methodOverride = require("method-override"),
+	  validator = require("express-validator"),
 	  flash		 = require("connect-flash"),
 	  googleStrategy = require("passport-google-oauth20").Strategy,
 	  facebookStrategy = require("passport-facebook").Strategy,
@@ -36,11 +37,11 @@ if(environment === "production"){
 	});
 }
 
-
 app.set("view engine", "ejs"); //So i don't need to specify all the .ejs files
 app.use(flash());
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended : "true"}));
+app.use(validator());
 app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 
@@ -53,14 +54,15 @@ app.use(session({
 	saveUninitialized: false,
 	store: new mongoStore({
 		mongooseConnection: mongoose.connection,
-		ttl: 3 * 24 * 60 * 60 
-	})
+	}),
+	cookie: {maxAge: 240 * 60 * 1000 }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req,res, next){ //Global middleware so i can access the user everywere
 	res.locals.currentUser = req.user;
+	res.locals.session = req.session;
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
 	next();

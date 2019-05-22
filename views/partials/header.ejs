@@ -7,42 +7,24 @@
 		<link href="/stylesheet/main.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 	</head>
-	<body>
-	<!--	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="/">Rhes's Spice</a>
-				</div>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    				<span class="navbar-toggler-icon"></span>
-  				</button>
-				<div class="collapse navbar-collapse" id="navbarText">
-					<ul class="nav navbar-nav ml-auto">
-						<li class="nav-item"><a href="/cart"><i class="nav-link fas fa-shopping-cart"></i></a></li>
-						<% if(!currentUser){ %>
-						<li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
-						<li class="nav-item"><a href="/register" class="nav-link">Sign up</a></li>
-						<% } else { %>
-						<li class="nav-item"><a href="/profile" class="nav-link">Welcome <%= currentUser.username %></a></li>
-						<li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
-						<% } %>
-					</ul>
-				</div>
-			</div>
-		</nav> -->
-		
+	<body>		
 		<nav class="navbar navbar-dark navbar-expand-lg">
-			<div class="container"><a href="/" class="navbar-brand text-white"><img src="/../public/images/rheaspicewhite.png" class="d-inline-block align-top" alt=""></a><button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler">
-			<span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-        		<div class="collapse navbar-collapse" id="navcol-1">
-            <ul class="nav navbar-nav">
-                <li role="presentation" class="nav-item"><a href="/products" class="nav-link text-white active">STORE</a></li>
-                <li role="presentation" class="nav-item"><a href="/blog" class="nav-link text-white">BLOG</a></li>
-                <li role="presentation" class="nav-item"><a href="/recipes" class="nav-link text-white">RICETTE</a></li>
-				<li class="nav-item ml-auto"><a href="/cart"><i class="nav-link fas fa-shopping-cart"> CARRELLO</i></a></li>
-            </ul>
+			<div class="container"><a href="/" class="navbar-brand text-white">
+				<img src="/images/rheaspicewhite.png" class="d-inline-block align-top" alt=""></a>
+				<button data-toggle="collapse" data-target="#navcol-1" class="navbar-toggler">
+					<span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navcol-1">
+					<ul class="nav navbar-nav">
+						<li role="presentation" class="nav-item"><a href="/products" class="nav-link text-white active">STORE</a></li>
+						<li role="presentation" class="nav-item"><a href="/blog" class="nav-link text-white">BLOG</a></li>
+						<li role="presentation" class="nav-item"><a href="/recipes" class="nav-link text-white">RICETTE</a></li>
+					</ul>
 					<div class="ml-auto">
-						
+						<a  class="btn btn-light action-button" href="/cart">
+							<i class="nav-link fas fa-shopping-cart"> CARRELLO</i>
+							<% if(session.cart && session.cart.totalQty > 0){ %><span class="badge badge-secondary"><%= session.cart.totalQty %><% } %></span>
+						</a>
 						<% if(!currentUser){ %>
 							<a class="btn btn-light action-button" role="button" href="/login">ACCEDI</a>
 							<a class="btn btn-light action-button" role="button" href="/register">ISCRIVITI</a>
@@ -50,8 +32,7 @@
 							<a class="btn btn-light action-button" role="button" href="/logout">LOGOUT</a>
 						<% } %>
 					</div>
-					</div>
-            
+				</div>
 			</div>
 		</nav>
 		

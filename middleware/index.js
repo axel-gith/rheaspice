@@ -1,4 +1,5 @@
 const middlewareObject = {},
+	  Cart = require("../models/cart"),
 	  Comment = require("../models/comment");
 
 middlewareObject.isLoggedIn = function isLoggedIn(req, res, next){
@@ -43,5 +44,6 @@ middlewareObject.checkCommentOwnership = function checkCommentOwnership(req, res
         res.redirect("/login");
 	}
 };
+
 
 module.exports = middlewareObject;

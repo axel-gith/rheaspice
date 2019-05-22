@@ -1,18 +1,50 @@
 <% include ../partials/header %>
 <div class="container">
-	<% var tot=0; if(currentUser.cart.length != 0){ currentUser.cart.forEach(function(product){ %>
-		<div class="photo-card">
-			<!--<div class="thumbnail">-->
-			<div class="photo-background" style="background-image:url("<%= product.image %>")">
-				<!--<div class="caption">-->
-				<div class="photo-details">
-					<h4><%= product.name %></h4>
-					<p><%= product.price %>€</p>
-				</div>
-			</div>	
-		</div>	
-	<% tot+= parseFloat(product.price) })} %>
-	<p>Totale: <%= tot.toFixed(2) %>€</p>
+	<% if(products !== null) { %>
+	
+	<div class="row">
+		<div class="col-sm-6 col-md-3 col-md-offset-2 col-sm-offset-3">
+			<ul class="list-group">
+				<% products.forEach(function(product){ %>
+					<li class="list-group-item">
+					<span class="badge badge-secondary"><%= product.qty %></span>
+					<strong><%= product.item.name %></strong>
+					<span class="badge badge-success"><%= product.item.price * product.qty %>€</span>
+					<div class="btn-group">
+						<button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" type="button">
+							Action <span class="caret>"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="">Reduce by 1</a></li>
+							<li><a href="">Remove all</a></li>
+						</ul>
+					</div>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-6 col-md-3 col-md-offset-2 col-sm-offset-3">
+			<strong>Totale: <%= parseFloat(totalPrice).toFixed(2) %>€ </strong>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-6 col-md-3 col-md-offset-2 col-sm-offset-3">
+			<form action="/checkout/paypal" method="POST">
+				<button class="btn btn-success"><i class="fab fa-paypal"> Paga con PayPal</i></button>
+			</form>
+		</div>
+	</div>
+	<% } else {%>
+	<div class="row">
+		<div class="col-sm-6 col-md-3 col-md-offset-2 col-sm-offset-3">
+			<strong>Il carrello è vuoto</strong>
+		</div>
+	</div>
+	<% } %>
 </div>
 
 <% include ../partials/footer %>
