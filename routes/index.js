@@ -33,18 +33,6 @@ router.get("/faq", function(req, res) {
     });
 });
 
-//==================================================
-//BLOG ROUTES
-//==================================================
-router.get("/blog", function(req, res) {
-    Blog.find({}, function(err, allBlogs){
-        if(err){
-            console.log(err);
-        } else {
-            res.render("blogs/index",{blogs: allBlogs});
-        }
-    });
-});
 
 //==================================================
 //RECIPE ROUTES

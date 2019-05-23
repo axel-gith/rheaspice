@@ -14,14 +14,10 @@ middlewareObject.isAdmin = function isAdmin(req, res, next){
 	if(req.isAuthenticated()){
 		if (req.user.isAdmin === true){
 			return next();
-		} else {
-			req.flash("error","You are not authorized to do that!");
-			res.redirect("back");
-		}
-	} else {
-			req.flash("error", "Please log in to do that");
+		} 
+	}		req.flash("error", "Please log in to do that");
+			console.log("should redirect now");
 			res.redirect("/login");
-		}
 };
 
 middlewareObject.checkCommentOwnership = function checkCommentOwnership(req, res, next){

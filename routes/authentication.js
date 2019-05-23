@@ -1,12 +1,12 @@
 const express  = require("express"),
 	  router   = express.Router(),
 	  User 	   = require("../models/user"),
-	  csrf	   = require("csurf"),
 	  validator = require("express-validator"),
-	  passport = require("passport");	
+	  csrf = require('csurf'),
+	  passport = require("passport");
 
-var csrfProtection = csrf();
-router.use(csrfProtection);
+const csrfProtection = csrf();
+	  router.use(csrfProtection);
 //==================================================
 //LOCAL AUTHENTICATION ROUTES
 //==================================================
@@ -26,7 +26,7 @@ router.post("/register",csrfProtection, function(req,res){
 			messages.push(error.msg);
 		});
 		req.flash ("error", messages);
-		res.redirect("back");
+		return res.redirect("back");
 	}
 	User.findOne({email: req.body.email}, function(foundEmail){
 		if(foundEmail){

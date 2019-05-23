@@ -1,0 +1,30 @@
+<% include ../partials/header %>
+
+<div class="container">	
+	<!-- Include stylesheet -->
+	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	  	<form action="/blog" method="POST">
+			<div class="form-groups">
+				<input  class="form-control" type="text" name="blog[title]" placeholder="Title"> 
+			</div>        
+			<div class="form-groups">
+				<input class="form-control" type="text" name="blog[image]" placeholder="Blog image url"> 
+			</div>        
+			<div class="form-groups" >
+				<textarea class="form-control" placeholder="Insert the text here" name="blog[body]"></textarea>
+			</div>
+			<div class="form-groups">
+				<button class="btn btn-primary">Submit!</button>
+			</div>
+			<input type="hidden" name="_csrf" value="<%= csrfToken %>"> 
+   		</form>
+	
+	<%= console.log(csrfToken) %>
+	
+<script src="https://cloud.tinymce.com/5/tinymce.min.js?3m2c3vwur23f5eu0w8v2owyekdgjjwm0d7qiih8lux3c7cze"></script>
+  	<script>tinymce.init({
+		selector:'textarea',
+		plugins: "image"
+	});</script>
+
+<% include ../partials/footer %>

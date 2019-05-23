@@ -2,8 +2,11 @@ const express = require("express"),
 	  router  = express.Router(),
 	  Product = require("../models/product"),
 	  Comment = require("../models/comment"),
+	  csrf = require('csurf'),
 	  middleware = require("../middleware");
 
+const csrfProtection = csrf();
+router.use(csrfProtection);
 
 //==================================================
 //PRODUCT ROUTES
@@ -21,8 +24,8 @@ router.get("/", function(req, res){
 });
 
 //New product form ROUTE
-router.get("/new",middleware.isAdmin, function(req, res){
-	res.render("products/new");
+router.get("/new", csrfProtection, middleware.isAdmin, function(req, res){
+	res.render("products/new", { csrfToken: req.csrfToken() });
 });
 
 //Product show page ROUTE
@@ -37,7 +40,7 @@ router.get("/:id", function(req, res){
 });
 
 //New product Post ROUTE
-router.post("/",middleware.isAdmin, function(req, res){
+router.post("/", csrfProtection, middleware.isAdmin, function(req, res){
 	Product.create(req.body.product, function(err, product){
 		if(err){
 			req.flash("error", "We weren't able to post the new product, please try again");
@@ -54,7 +57,7 @@ router.get("/:id/edit",middleware.isAdmin, function(req, res){
 		if(err){
 			console.log("will eventualy handle the error10");
 		}
-			res.render("products/edit", {product: foundProduct});
+			res.render("products/edit", {product: foundProduct, csrfToken: req.csrfToken()});
 	});
 });
 

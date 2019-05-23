@@ -23,6 +23,7 @@ const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
 	  authenticationRoutes = require("./routes/authentication"),
 	  checkoutRoutes = require("./routes/checkout"),
+	  blogRoutes = require("./routes/blog"),
 	  indexRoutes = require("./routes/index");
 
 mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
@@ -141,6 +142,7 @@ app.use("/products/:id/comments", commentRoutes);
 app.use("/products", productRoutes);
 app.use(checkoutRoutes);
 app.use(authenticationRoutes);
+app.use("/blog", blogRoutes);
 
 
 //========================================
