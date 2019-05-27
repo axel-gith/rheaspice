@@ -29,9 +29,13 @@ module.exports = function Cart (oldCart){
 	};
 	
 	this.removeItem = function(id){
-		this.totalQty-=this.items[id].qty;
-		this.totalPrice -= this.items[id].price;
-		delete this.items[id];
+		if(this.items[id]){
+			this.totalQty-=this.items[id].qty;
+			this.totalPrice -= this.items[id].price;
+			delete this.items[id];
+		} else {
+			console.log("that element isn't even in the cart!");
+		}
 	};
 	
 	this.generateArray = function (){
