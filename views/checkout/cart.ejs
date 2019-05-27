@@ -3,7 +3,7 @@
 	<% if(products !== null) { %>
 	
 	<div class="row">
-		<div class="col-sm-6 col-md-3 col-md-offset-2 col-sm-offset-3">
+		<div class="col-sm-6 col-md-6 col-md-offset-2 col-sm-offset-3">
 			<ul class="list-group">
 				<% products.forEach(function(product){ %>
 					<li class="list-group-item">
@@ -11,13 +11,8 @@
 					<strong><%= product.item.name %></strong>
 					<span class="badge badge-success"><%= product.item.price * product.qty %>€</span>
 					<div class="btn-group">
-						<button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" type="button">
-							Action <span class="caret>"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li><a href="">Reduce by 1</a></li>
-							<li><a href="">Remove all</a></li>
-						</ul>
+						<a href="/cart/reduce/<%= product.item._id %>" class="btn btn-primary btn-sm">- 1</a>
+							<a class="btn btn-danger btn-sm" href="cart/remove/<%= product.item._id %>">X</a>
 					</div>
 				</li>
 				<% }) %>

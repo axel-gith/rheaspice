@@ -18,7 +18,7 @@ router.get("/", function(req, res){
 		if(err){
 			console.log("will eventualy handle the error1");
 		} else {
-			res.render("products/index", {products: allProducts});
+			res.render("products/index", {products: allProducts,  csrfToken: req.csrfToken()});
 		}
 	});
 });

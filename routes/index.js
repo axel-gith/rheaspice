@@ -2,7 +2,7 @@ const express  = require("express"),
 	  Faq 	   = require("../models/faq.js"),
 	  middleware = require("../middleware"),
 	  Blog 	   = require("../models/blog.js"),
-	  Recipe 	   = require("../models/recipe.js"),	
+	  Recipe   = require("../models/recipe.js"),	
 	  router   = express.Router();	
 
 //==================================================

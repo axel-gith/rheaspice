@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<% if(orders.length > 0){ %>
+		<div class="row">
+			<div class="col-sm-6 col-md-6 col-md-offset-2 col-sm-offset-3">
+				<ul class="list-group">
+					<% for(i = orders.length-1; i >= 0; i--){ %>
+					<h3>
+						Ordine del <%= orders[i].orderDate[8] + orders[i].orderDate[9]%>-<%= orders[i].orderDate[5] + orders[i].orderDate[6]%>-<%= orders[i].orderDate[0] + orders[i].orderDate[1] + orders[i].orderDate[2] + orders[i].orderDate[3] %>
+					</h3>
+					<% orders[i].itemList.forEach(function(item){ %>
+						<li class="list-group-item">
+						<span class="badge badge-secondary"><%= item.quantity %></span>
+						<strong><%= item.name %></strong>
+						<span class="badge badge-success"><%= item.price * item.quantity %>€</span>
+					</li>
+					<% }) %>
+					<li class="list-group-item">Totale: <%= orders[i].totalAmount %>€</li><% } %>
+				</ul>
+			</div>
+		</div>
+	<% } else { %>
+		<h1>Non hai ancora effettutato ordini</h1>
+	<% } %>
+</div>
+
+<% include ../partials/footer %>

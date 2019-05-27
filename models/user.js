@@ -8,7 +8,12 @@ var userSchema = new mongoose.Schema({
 	googleId: String,
 	facebookId: String,
 	isAdmin: {type: Boolean, default: false },
-	cart: []
+	orders: [{
+        id : {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Order"
+        },
+	}]
 });
 
 userSchema.plugin(passportLocalMongoose);

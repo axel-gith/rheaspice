@@ -22,7 +22,14 @@
 							<h4 class="card-title"><%= product.name %></h4>
 							<p class="card-text"><%= product.description.substring(0,50) %>...</p>
 						</div>
-						<a class="btn btn-danger card-link" href="/products/<%= product._id %>">Visualizza</a>
+						<form action="/cart/add/<%= product._id %>" method="POST">
+							<button class="btn btn-default card-link">
+								<i class="fas fa-shopping-cart"></i>
+							</button>
+							<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+						</form>
+						<a style="display:inline" class="btn btn-danger" href="/products/<%= product._id %>"><i class="fas fa-info"></i></a>
+						
 					</div>	
 				</div>
 			<% }) %>

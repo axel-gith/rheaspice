@@ -26,7 +26,7 @@ const commentRoutes = require("./routes/comments"),
 	  blogRoutes = require("./routes/blog"),
 	  indexRoutes = require("./routes/index");
 
-mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://AxelAdmin:" + process.env.PASSWORD + "@rheaspicetest-rwz5h.mongodb.net/test?retryWrites=true", {useNewUrlParser: true, useFindAndModify: false});
 if(environment === "production"){
 	app.enable('trust proxy');
 	app.use(function(req, res, next){ 

@@ -2,6 +2,8 @@ const express  = require("express"),
 	  middleware = require("../middleware"),
 	  Product = require("../models/product"),
 	  Cart = require("../models/cart"),
+	  Order = require("../models/order"),
+	  User = require("../models/user"),
 	  paypal = require("paypal-rest-sdk"),
 	  router   = express.Router();
 
@@ -18,7 +20,7 @@ router.get("/cart", function(req,res){
 	var cart = new Cart(req.session.cart);
 	return res.render("checkout/cart",{products : cart.generateArray(), totalPrice: cart.totalPrice});
 });
-
+//ADD ITEM TO CART
 router.post("/cart/add/:id", function(req, res){
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
 	Product.findById(req.params.id, function(err, foundProduct){
@@ -27,11 +29,32 @@ router.post("/cart/add/:id", function(req, res){
 			res.redirect("back");
 		} else {
 			cart.add(foundProduct, foundProduct._id);
-			console.log(req.session.cart);
 			req.session.cart = cart;
 			res.redirect("/products");
 		}
 	});
+});
+
+//REDUCE ITEM IN CART
+router.get("/cart/reduce/:id", function(req, res){
+	var productId = req.params.id;
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	
+	cart.reduceByOne(productId);
+	
+	req.session.cart = cart;
+	res.redirect("back");
+});
+
+//REMOVE ITEM IN CART
+router.get("/cart/remove/:id", function(req, res){
+	var productId = req.params.id;
+	var cart = new Cart(req.session.cart ? req.session.cart : {});
+	
+	cart.removeItem(productId);
+	
+	req.session.cart = cart;
+	res.redirect("back");
 });
 
 // =========================================
@@ -41,8 +64,7 @@ router.post("/checkout/paypal", function(req, res){
 	if(req.session.cart){
 		var cart = new Cart(req.session.cart);
 		var create_payment_json = paymentJson(cart);
-			console.log("payment after json outside middleware file" + create_payment_json);
-    
+		
 		paypal.payment.create(create_payment_json, function (error, payment) {
 			if (error) {
 				throw error;
@@ -60,6 +82,7 @@ router.post("/checkout/paypal", function(req, res){
 	  }	
 });
 
+//SUCCESSFUL PAYPAL PAYMENT ROUTE
 router.get("/checkout/paypal/success", function(req, res){
 	const paymentId = req.query.paymentId;
 	const payerId = req.query.PayerID;
@@ -79,19 +102,66 @@ router.get("/checkout/paypal/success", function(req, res){
 			console.log(error.response);
 			throw error;
 		} else {
-			console.log(JSON.stringify(payment));
-			req.session.cart = {};
-			req.flash("success", "Il pagamento è stato effettuato correttamente. Riceverai una email appena l'ordine sarà evaso");
-			res.redirect("/products");
-		}
+			Order.create({
+				itemList: payment.transactions[0].item_list.items,
+				shippingAddress: payment.payer.payer_info.shipping_address,
+				totalAmount: payment.transactions[0].amount.total,
+				orderDate: payment.create_time,
+				jsonString: JSON.stringify(payment)
+			}, function(err, newOrder){
+				if(err){
+					console.log(err);
+				} else {
+					if(req.isAuthenticated()){
+						req.user.orders.push(newOrder);
+						req.user.save();
+					}
+						console.log("Payment added successfully to the DB");
+				  }
+				});
+				req.session.cart = {};
+				req.flash("success", "Il pagamento è stato effettuato correttamente. A breve riceverai una email di conferma all'indirizzo email utilizzato su PayPal");
+				res.redirect("/products");
+			}
+		
 	});
 });
 
+//CANCEL PAYPAL PAYMENT ROUTE
 router.get('/checkout/paypal/cancel', function(req, res){
 	req.flash("success", "Il pagamento è stato annullato correttamente.");
 	res.redirect("/products");
 });
 
+
+
+
+//========================
+//LOGGED IN ORDERS VIEW
+//========================
+router.get("/orders/:id", middleware.isLoggedIn, function(req, res){
+	Promise.all(req.user.orders.map(order => {
+    	return Order.findOne({_id: order}).exec().catch(err => {
+        	// convert error to null result in resolved array
+        	return null;
+    	});
+	})).then(foundOrders => {
+   		res.render("checkout/orders",{orders: foundOrders});
+	}).catch(err => {
+    // handle error here
+	});	
+});
+
+
+
+
+
+
+
+
+//============================
+//Creates payment JSON 
+//============================
 function paymentJson(cart){
 	const payment = {
 		intent: "sale",
@@ -99,7 +169,7 @@ function paymentJson(cart){
 			payment_method: "paypal"
 		},
 		redirect_urls: {
-			return_url: "https://rheaspice.com/checkout/paypal/success",
+			return_url: "https://rhea-test.run.goorm.io/checkout/paypal/success",
 			cancel_url: "https://rheaspice.com/checkout/paypal/cancel"
 		},
 		transactions: [{
