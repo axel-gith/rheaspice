@@ -72,7 +72,7 @@ router.post("/login",csrfProtection, passport.authenticate("local",{
 //FACEBOOK AUTHENTICATION ROUTES
 //==================================================
 router.get('/login/facebook',
-  passport.authenticate('facebook', {scope:['email']}));
+  passport.authenticate('facebook'));
 
 router.get('/auth/facebook/return', passport.authenticate('facebook', {
 	failureRedirect: '/login',
@@ -85,7 +85,7 @@ router.get('/auth/facebook/return', passport.authenticate('facebook', {
 //==================================================
 //GOOGLE AUTHENTICATION ROUTES
 //==================================================
-router.get("/login/google", passport.authenticate("google", { scope: ['profile', 'email'] }));
+router.get("/login/google", passport.authenticate("google", { scope: ['profile']}));
 
 router.get("/auth/google/return", passport.authenticate('google', { 
 		failureRedirect: '/login',

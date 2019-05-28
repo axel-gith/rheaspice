@@ -79,10 +79,8 @@ passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
 	callbackURL: "https://www.rheaspice.com/auth/facebook/return",
-	profileFields: ['id', 'emails']
   },
 	function(accessToken, refreshToken, profile, done) {
-		console.log(profile);
 		process.nextTick(function(){
 			User.findOne({facebookId: profile.id }).then((currentUser)=>{
 				if(currentUser){
@@ -92,7 +90,6 @@ passport.use(new facebookStrategy({
 					new User ({
 						facebookId: profile.id,
 						username: profile.displayName,
-						email: profile.email
 					}).save().then((newUser)=>{
 					console.log("new user created " + newUser);
 						done(null, newUser);
@@ -112,7 +109,6 @@ passport.use(new googleStrategy({
     callbackURL: "https://www.rheaspice.com/auth/google/return"
   },
   	function(accessToken, refreshToken, profile, done) {
-	console.log(profile);
 		User.findOne({googleId: profile.id }).then((currentUser)=>{
 			if(currentUser){
 				console.log("user is " + currentUser.username);
@@ -121,7 +117,6 @@ passport.use(new googleStrategy({
 				new User ({
 					googleId: profile.id,
 					username: profile.displayName,
-					email: profile.email
 				}).save().then((newUser)=>{
 				console.log("new user created " + newUser);
 					done(null, newUser);
