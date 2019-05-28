@@ -79,7 +79,7 @@ passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
 	callbackURL: "https://www.rheaspice.com/auth/facebook/return",
-	profileFields: ['id', 'email']
+	profileFields: ['id', 'emails']
   },
 	function(accessToken, refreshToken, profile, done) {
 		console.log(profile);
@@ -98,7 +98,9 @@ passport.use(new facebookStrategy({
 						done(null, newUser);
 					});
 				}
-			});
+			}).catch(err =>{
+				throw err;
+			});	
 		});	
 	}
 ));
@@ -125,6 +127,8 @@ passport.use(new googleStrategy({
 					done(null, newUser);
 				});
 			}
+		}).catch(err =>{
+			throw err;
 		});	
 	}
 ));

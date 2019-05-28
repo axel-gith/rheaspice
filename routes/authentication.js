@@ -72,7 +72,7 @@ router.post("/login",csrfProtection, passport.authenticate("local",{
 //FACEBOOK AUTHENTICATION ROUTES
 //==================================================
 router.get('/login/facebook',
-  passport.authenticate('facebook'));
+  passport.authenticate('facebook', {scope:['email']}));
 
 router.get('/auth/facebook/return', passport.authenticate('facebook', {
 	failureRedirect: '/login',
