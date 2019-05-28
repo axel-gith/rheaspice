@@ -3,6 +3,9 @@ const express  = require("express"),
 	  User 	   = require("../models/user"),
 	  validator = require("express-validator"),
 	  csrf = require('csurf'),
+	  async = require("async"),
+	  nodemailer = require("nodemailer"),
+	  crypto = require("crypto"),
 	  passport = require("passport");
 
 const csrfProtection = csrf();
@@ -49,10 +52,7 @@ router.post("/register",csrfProtection, function(req,res){
 				}
 			});
 		}
-	});
-		
-
-		
+	});		
 });
 
 //Login form ROUTE
@@ -106,5 +106,124 @@ router.get("/logout", function(req, res){
 	res.redirect("/products");
 });
 
+//==================================================
+//PASSWORD RESET ROUTES
+//==================================================
+//Forgot password input route
+router.get("/forgot", function(req, res){
+	res.render("auth/forgot", {csrfToken: req.csrfToken()});
+});
+
+//Forgot password post route
+router.post('/forgot', function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+          req.flash('error', "L'email inserito non è stato trovato.");
+          return res.redirect('/forgot');
+        }
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      });
+    },
+    function(token, user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail', 
+        auth: {
+          user: 'nerdius2000@gmail.com',
+          pass: process.env.GMAILPW
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'nerdius2000@enterprise.com',
+        subject: 'RheaSpice Password Reset',
+        text: 'Ciao ' + user.username + ',\n' +
+		  'RheaSpice ha ricevuto una richiesta per reimpostare la password del tuo account.\n Per procedere, clicca sul seguente link:\n'  +
+          'https://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'Se non sei stato tu a fare tale richiesta, perfavore ignora questa email e la tua password non verrà cambiata \n\n grazie, \n Assistenza Clienti'
+      };
+      smtpTransport.sendMail(mailOptions, function(err) {
+        console.log('mail sent');
+        req.flash('success', 'Abbiamo inviato una e-mail a ' + user.email + '. Per procedere controlla la tua posta elettronica');
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/forgot');
+  });
+});
+
+//Reset passoword form route
+router.get('/reset/:token', function(req, res){
+	  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/forgot');
+    }
+    res.render('auth/reset', {token: req.params.token, csrfToken: req.csrfToken()});
+  });
+});
+
+//Reset password post route
+router.post('/reset/:token', function(req, res) {
+	async.waterfall([
+    	function(done) {
+      		User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        		if (!user) {
+          			req.flash('error', 'Password reset token is invalid or has expired.');
+          			return res.redirect('back');
+        		}
+        		if(req.body.password === req.body.confirm) {
+          			user.setPassword(req.body.password, function(err) {
+            			user.resetPasswordToken = undefined;
+            			user.resetPasswordExpires = undefined;
+						user.save(function(err) {
+              				req.logIn(user, function(err) {
+                			done(err, user);
+              				});
+            			});
+          			});
+       			} else {
+            		req.flash("error", "Passwords do not match.");
+            		return res.redirect('back');
+        		}
+      		});
+    	},
+    	function(user, done) {
+			var smtpTransport = nodemailer.createTransport({
+        		service: 'Gmail', 
+        		auth: {
+          		user: 'nerdius2000@gmail.com',
+          		pass: process.env.GMAILPW
+        		}
+      		});
+      		var mailOptions = {
+				to: user.email,
+				from: 'nerdius2000@enterprise.com',
+				subject: 'La tua password è stata modificata',
+				text: 'Ciao '+ user.username+',\n\n' +
+				  'ti confermiamo che la password dell\'account ' + user.email + ' è stata modificata.\n Grazie, Assistenza Clienti'
+      		};
+      		smtpTransport.sendMail(mailOptions, function(err) {
+        		req.flash('success', 'Success! Your password has been changed.');
+        		done(err);
+      		});
+    	}
+  	], function(err) {
+    		res.redirect('/products');
+ 		 });
+});
 
 module.exports = router;

@@ -2,8 +2,10 @@ const mongoose = require("mongoose"),
 	  passportLocalMongoose = require("passport-local-mongoose");
 
 var userSchema = new mongoose.Schema({
-	email: String,
-	username: String,
+	username: {type: String, unique: true, required: true},
+	email: {type: String, unique: true, required: true},
+	resetPasswordExpires: Date,
+	resetPasswordToken: String,
 	password: String,
 	googleId: String,
 	facebookId: String,
@@ -12,7 +14,7 @@ var userSchema = new mongoose.Schema({
         id : {
             type : mongoose.Schema.Types.ObjectId,
             ref : "Order"
-        },
+        }
 	}]
 });
 
