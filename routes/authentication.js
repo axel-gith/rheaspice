@@ -15,7 +15,7 @@ const csrfProtection = csrf();
 //==================================================
 //Register form ROUTE
 router.get("/register", function(req, res){
-	res.render("register", {csrfToken: req.csrfToken()});
+	res.render("auth/register", {csrfToken: req.csrfToken()});
 });
 
 //Register post ROUTE
@@ -57,7 +57,7 @@ router.post("/register",csrfProtection, function(req,res){
 
 //Login form ROUTE
 router.get("/login", function(req, res){
-	res.render("login", {csrfToken: req.csrfToken()});
+	res.render("auth/login", {csrfToken: req.csrfToken()});
 });
 
 //Login post ROUTE
@@ -169,7 +169,7 @@ router.post('/forgot', function(req, res, next) {
 router.get('/reset/:token', function(req, res){
 	  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
     if (!user) {
-      req.flash('error', 'Password reset token is invalid or has expired.');
+      req.flash('error', 'Il token per reimpostare la passoword è errato o scaduto.');
       return res.redirect('/forgot');
     }
     res.render('auth/reset', {token: req.params.token, csrfToken: req.csrfToken()});
@@ -182,7 +182,7 @@ router.post('/reset/:token', function(req, res) {
     	function(done) {
       		User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
         		if (!user) {
-          			req.flash('error', 'Password reset token is invalid or has expired.');
+          			req.flash('error', 'Il token per reimpostare la passoword è errato o scaduto.');
           			return res.redirect('back');
         		}
         		if(req.body.password === req.body.confirm) {

@@ -16,6 +16,7 @@ var orderSchema = new mongoose.Schema({
 		postal_code: String,
 		country_code: String,
 	},
+	paypalEmail: String,
 	orderDate: String,
 	totalAmount: String,
 	jsonString: String

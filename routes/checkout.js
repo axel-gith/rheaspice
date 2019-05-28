@@ -5,6 +5,7 @@ const express  = require("express"),
 	  Order = require("../models/order"),
 	  User = require("../models/user"),
 	  paypal = require("paypal-rest-sdk"),
+	  nodemailer = require("nodemailer"),
 	  router   = express.Router();
 
 paypal.configure({
@@ -111,21 +112,45 @@ router.get("/checkout/paypal/success", function(req, res){
 				shippingAddress: payment.payer.payer_info.shipping_address,
 				totalAmount: payment.transactions[0].amount.total,
 				orderDate: payment.create_time,
+				paypalEmail: payment.payer.payer_info.email,
 				jsonString: JSON.stringify(payment)
 			}, function(err, newOrder){
-				if(err){
-					console.log(err);
-				} else {
-					if(req.isAuthenticated()){
-						req.user.orders.push(newOrder);
-						req.user.save();
-					}
+					if(err){
+						console.log(err);
+					} else {
+						var email = newOrder.paypalEmail;
+						if(req.isAuthenticated()){
+							req.user.orders.push(newOrder);
+							req.user.save();
+							email = req.user.email;
+						}
+						var smtpTransport = nodemailer.createTransport({
+							service: 'Gmail', 
+							auth: {
+							user: 'nerdius2000@gmail.com',
+							pass: process.env.GMAILPW
+							}
+						});
+						var mailOptions = {
+							to: 'axel_sk8@hotmail.it',  //Hard codded just for testing purposes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							from: 'nerdius2000@enterprise.com',
+							subject: 'RheaSpice Password Reset',
+							text: 'Ciao,\n' +
+							  'RheaSpice ti conferma che ha ricevuto il tuo ordine.\n' + newOrder.itemList + ' Ti invieremo un\'altra email appena l\'ordine sarà evaso \n'  +
+							  'Grazie di aver scelto Rhea Spice\n\n' 							  
+						  };
+						smtpTransport.sendMail(mailOptions, function(err) {
+							if(err){
+								console.log("Error while sending the email");
+							}
+							console.log('mail sent');
+						 });
 						console.log("Payment added successfully to the DB");
-				  }
-				});
-				req.session.cart = {};
-				req.flash("success", "Il pagamento è stato effettuato correttamente. A breve riceverai una email di conferma all'indirizzo email utilizzato su PayPal");
+						req.flash("success", "Il pagamento è stato effettuato correttamente. A breve riceverai una email di conferma a " + email);
+				  	}
+				req.session.cart = null;
 				res.redirect("/products");
+				});
 			}
 		
 	});

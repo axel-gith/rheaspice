@@ -1,19 +1,7 @@
-<% include partials/header %>
-	
+<% include ../partials/header %>
 
-	<!--<div class="container">
-		<h1>Login page</h1>
-		<form action="/login" method="POST">
-			<input type="text" name="username" placeholder="John Doe">
-			<input type="password" name="password" placeholder="password">
-			<input type="submit" value="login">		
-		</form>
-        <a href="/login/facebook"><button class="btn btn-primary"><i class="fab fa-facebook"></i></button></a> 
-		
-		
-    </div>	-->
 <div class="login-dark">
-		<h2 class="sr-only">Login Form</h2>
+		<h2 class="sr-only">Register Form</h2>
 		<div class="illustration"><i class="fas fa-user-lock"></i></div>
 		<div class="form-group"><a href="/login/google">
 			<button type="button" class="google-button">
@@ -25,14 +13,14 @@
 		</a></div>
 		<a href="/login/facebook"><button class="loginBtn loginBtn--facebook">Accedi con Facebook</button></a>
 		<p style="color: black">oppure</p>
-	<form action="/login" method="POST">
+	<form action="/register" method="POST">
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+		<div class="form-group"><input class="form-control" type="email" name="email" placeholder="EMAIL" /></div>
 		<div class="form-group"><input class="form-control" type="text" name="username" placeholder="USERNAME" /></div>
 		<div class="form-group"><input class="form-control" type="password" name="password" placeholder="PASSWORD" /></div>
-		<div class="form-group"><button class="btn btn-primary btn-block" type="submit">Effettua il login</button></div>
-		<a href="#" class="forgot">Dimenticato la password?</a>
+		<div class="form-group"><button class="btn btn-primary btn-block" type="submit">Registrati</button></div>
 	</form>
+	<p style="color:black">Sei gia registrato?<a href="/login"> Accedi qui</a></p>
 </div>
-
-
-<% include partials/footer %>
+	
+<% include ../partials/footer %>
