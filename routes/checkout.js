@@ -21,6 +21,7 @@ router.get("/cart", function(req,res){
 	var cart = new Cart(req.session.cart);
 	return res.render("checkout/cart",{products : cart.generateArray(), totalPrice: cart.totalPrice});
 });
+
 //ADD ITEM TO CART
 router.post("/cart/add/:id", function(req, res){
 	var cart = new Cart(req.session.cart ? req.session.cart : {});
@@ -118,7 +119,7 @@ router.get("/checkout/paypal/success", function(req, res){
 					if(err){
 						console.log(err);
 					} else {
-						var email = newOrder.paypalEmail;
+						var email = newOrder.email;
 						if(req.isAuthenticated()){
 							req.user.orders.push(newOrder);
 							req.user.save();

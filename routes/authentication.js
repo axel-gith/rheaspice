@@ -85,7 +85,7 @@ router.get('/auth/facebook/return', passport.authenticate('facebook', {
 //==================================================
 //GOOGLE AUTHENTICATION ROUTES
 //==================================================
-router.get("/login/google", passport.authenticate("google", { scope: ['profile'] }));
+router.get("/login/google", passport.authenticate("google", { scope: ['profile', 'email'] }));
 
 router.get("/auth/google/return", passport.authenticate('google', { 
 		failureRedirect: '/login',
