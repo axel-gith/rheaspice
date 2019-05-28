@@ -84,14 +84,15 @@ passport.use(new facebookStrategy({
 	function(accessToken, refreshToken, profile, done) {
 		console.log(profile);
 		process.nextTick(function(){
-			User.findOne({facebookId: profile.id, email: profile.email}).then((currentUser)=>{
+			User.findOne({facebookId: profile.id }).then((currentUser)=>{
 				if(currentUser){
 					console.log("user is " + currentUser.username);
 					done(null, currentUser);
 				} else {
 					new User ({
 						facebookId: profile.id,
-						username: profile.displayName
+						username: profile.displayName,
+						email: profile.email
 					}).save().then((newUser)=>{
 					console.log("new user created " + newUser);
 						done(null, newUser);
@@ -110,14 +111,15 @@ passport.use(new googleStrategy({
   },
   	function(accessToken, refreshToken, profile, done) {
 	console.log(profile);
-		User.findOne({googleId: profile.id, email: profile.email}).then((currentUser)=>{
+		User.findOne({googleId: profile.id }).then((currentUser)=>{
 			if(currentUser){
 				console.log("user is " + currentUser.username);
 				done(null, currentUser);
 			} else {
 				new User ({
 					googleId: profile.id,
-					username: profile.displayName
+					username: profile.displayName,
+					email: profile.email
 				}).save().then((newUser)=>{
 				console.log("new user created " + newUser);
 					done(null, newUser);
