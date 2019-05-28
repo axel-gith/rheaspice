@@ -78,7 +78,7 @@ passport.use(new localStrategy(User.authenticate()));
 passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
-	callbackURL: "https://rheaspice.com/auth/facebook/return",
+	callbackURL: "https://www.rheaspice.com/auth/facebook/return",
 	profileFields: ['id', 'email']
   },
 	function(accessToken, refreshToken, profile, done) {
