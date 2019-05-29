@@ -33,102 +33,35 @@
 				<br>
 				<br>
 				<br>
-				            <!--Review section-->
-            <div class="thumbnail">
-                <div class="caption-full">
-                    <% if (product.rating === 0) { %>
-                    <h5>
-                        <em>No reviews yet.</em>
-                    </h5>
-                    <% } else { %>
-                    <p>
-                        <span class="fa fa-star checked"></span>
-                        <span class="fa fa-star <% if (product.rating > 1.5) { %> checked <% } %>"></span>
-                        <span class="fa fa-star <% if (product.rating > 2.5) { %> checked <% } %>"></span>
-                        <span class="fa fa-star <% if (product.rating > 3.5) { %> checked <% } %>"></span>
-                        <span class="fa fa-star <% if (product.rating > 4.5) { %> checked <% } %>"></span>
-                        <em>(total reviews: <%= product.reviews.length %>)</em>
-                    </p>
-                    <p>
-                        Current product rating: <strong><%= product.rating.toFixed(2) %></strong>
-                    </p>
-                    <p><h4>Latest reviews for this product:</h4></p>
-                    <hr style="margin-top: 0;">
-                    <% product.reviews.forEach(function(review){ %>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <%- '<span class="fa fa-star checked"></span>'.repeat(review.rating) %><%- '<span class="fa fa-star"></span>'.repeat(5 - review.rating) %>
-                            <div>Review by: <strong><%= review.author.username %></strong></div>
-                            <span><em><%= review.updatedAt.toDateString() %></em></span>
-                        </div>
-                        <div class="col-md-9">
-                            <p style="text-align: justify; word-wrap: break-word;">
-                                <%= review.text %>
-                            </p>
-                            <% if(currentUser && review.author.id.equals(currentUser._id) || (currentUser && currentUser.isAdmin === true)){ %>
-                            <a class="btn btn-xs btn-warning"
-                               href="/products/<%=product._id %>/reviews/<%=review._id %>/edit">Edit</a>
-                            <form id="delete-form" action="/products/<%=product._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                            </form>
-                            <% } %>
-                        </div>
-                    </div>
-                    <hr>
-                    <% }); %>
-				<div class="row">
-					<form action="/products/<%= product._id %>/reviews" method="POST">
-						<div class="col-md-12">
-							<div class="form-group">
-                    		<textarea class="form-control" type="text" name="review[text]" placeholder="Write a review for this product..." rows="5"></textarea>
-                			</div>
-               				 <div class="form-group">
-                    			<button class="btn btn-primary btn-block">Submit a Review</button>
-                			</div>
+				<div class="well">
+					<p>Comments:</p>
+					<hr>
+					<% product.comments.forEach(function(comment){ %>
+						<div class="row">
+							<div class="col-md-12">
+								<strong><%= comment.author.username %>:</strong>
+								<span class="float-right">
+									<% if(comment.created.day < 10){ %>
+										0<% } %><%= comment.created.day %>/<% if(comment.created.month < 10){ %>0<% } %><%= comment.created.month + 1 %>/<%= comment.created.year %>
+								</span>
+								<p><%- comment.text %></p>
+								<% if((currentUser && currentUser._id.equals(comment.author.id)) || (currentUser && currentUser.isAdmin === true)){ %>
+									<a href="/products/<%= product._id %>/comments/<%= comment._id %>/edit" class="btn btn-warning btn-sm">Edit</a>
+									<form class="delete_btn" action="/products/<%= product._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+										<input type="submit" class="btn btn-danger btn-sm" value="Delete">
+									</form>
+								<% } %>
+							</div>	
 						</div>
-						<div class="col-md-3">
-							                <div class="form-group">
-                    <label for="rating">Leave a rating:</label>
-                    <fieldset class="starability-basic form-group" id="rating">
-                    <div>
-                    <input type="radio" id="first-rate5" name="review[rating]" value="5" checked />
-                    <label for="first-rate5" title="5 stars - Amazing">
-                        <%- '<span class="fa fa-star checked"></span>'.repeat(5) %>
-                    </label>
-                    </div>
-                    <div>
-                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                    <label for="first-rate4" title="4 stars - Very good">
-                        <%- '<span class="fa fa-star checked"></span>'.repeat(4) %>
-                    </label>
-                    </div>
-                    <div>
-                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                    <label for="first-rate3" title="3 stars - Average">
-                        <%- '<span class="fa fa-star checked"></span>'.repeat(3) %>
-                    </label>
-                    </div>
-                    <div>
-                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                    <label for="first-rate2" title="2 stars - Not good">
-                        <%- '<span class="fa fa-star checked"></span>'.repeat(2) %>
-                    </label>
-                    </div>
-                    <div>
-                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                    <label for="first-rate1" title="1 star - Terrible">
-                        <%- '<span class="fa fa-star checked"></span>'.repeat(1) %>
-                    </label>
-                </div>
-                        
-                    </fieldset>
-                </div>
+					<hr>
+					<% }) %>
+					<form action="/products/<%= product._id %>/comments" method="POST">
+						<div class="form-group">
+							<textarea class="form-control" placeholder="comment" name="comment[text]" required></textarea>
 						</div>
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            </form>
-				</div>
-                    <% } %>
-				
+						<button class="btn btn-primary btn-sm">Submit!</button>
+					</form>
+			    </div>
 			</div>
 		</div>	
 	</div>

@@ -21,7 +21,6 @@ const express	   = require("express"),
 //ROUTE cosntants
 const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
-	  reviewRoutes     = require("./routes/reviews"),
 	  authenticationRoutes = require("./routes/authentication"),
 	  checkoutRoutes = require("./routes/checkout"),
 	  blogRoutes = require("./routes/blog"),
@@ -80,8 +79,10 @@ passport.use(new facebookStrategy({
 	clientID: process.env.FB_CLIENT_ID,
 	clientSecret: process.env.FB_APP_SECRET,
 	callbackURL: "https://www.rheaspice.com/auth/facebook/return",
+	profileFields: ['id', 'emails']
   },
 	function(accessToken, refreshToken, profile, done) {
+		console.log(profile);
 		process.nextTick(function(){
 			User.findOne({facebookId: profile.id }).then((currentUser)=>{
 				if(currentUser){
@@ -91,6 +92,7 @@ passport.use(new facebookStrategy({
 					new User ({
 						facebookId: profile.id,
 						username: profile.displayName,
+						email: profile.email
 					}).save().then((newUser)=>{
 					console.log("new user created " + newUser);
 						done(null, newUser);
@@ -99,8 +101,6 @@ passport.use(new facebookStrategy({
 			}).catch(err =>{
 				throw err;
 			});	
-		}).catch(err =>{
-			throw err;
 		});	
 	}
 ));
@@ -112,6 +112,7 @@ passport.use(new googleStrategy({
     callbackURL: "https://www.rheaspice.com/auth/google/return"
   },
   	function(accessToken, refreshToken, profile, done) {
+	console.log(profile);
 		User.findOne({googleId: profile.id }).then((currentUser)=>{
 			if(currentUser){
 				console.log("user is " + currentUser.username);
@@ -120,6 +121,7 @@ passport.use(new googleStrategy({
 				new User ({
 					googleId: profile.id,
 					username: profile.displayName,
+					email: profile.email
 				}).save().then((newUser)=>{
 				console.log("new user created " + newUser);
 					done(null, newUser);
@@ -150,7 +152,6 @@ app.use("/products", productRoutes);
 app.use(checkoutRoutes);
 app.use(authenticationRoutes);
 app.use("/blog", blogRoutes);
-app.use("/products/:id/reviews", reviewRoutes);
 
 
 //========================================
