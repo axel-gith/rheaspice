@@ -21,6 +21,7 @@ const express	   = require("express"),
 //ROUTE cosntants
 const commentRoutes = require("./routes/comments"),
       productRoutes = require("./routes/products"),
+	  reviewRoutes     = require("./routes/reviews"),
 	  authenticationRoutes = require("./routes/authentication"),
 	  checkoutRoutes = require("./routes/checkout"),
 	  blogRoutes = require("./routes/blog"),
@@ -98,6 +99,8 @@ passport.use(new facebookStrategy({
 			}).catch(err =>{
 				throw err;
 			});	
+		}).catch(err =>{
+			throw err;
 		});	
 	}
 ));
@@ -147,6 +150,7 @@ app.use("/products", productRoutes);
 app.use(checkoutRoutes);
 app.use(authenticationRoutes);
 app.use("/blog", blogRoutes);
+app.use("/products/:id/reviews", reviewRoutes);
 
 
 //========================================

@@ -20,6 +20,16 @@
 						<!--<div class="caption">-->
 						<div class="card-body">
 							<h4 class="card-title"><%= product.name %></h4>
+							<% if (product.rating === 0) { %>
+								<em>No reviews yet.</em>
+								<% } else { %>
+									<span class="fa fa-star checked"></span>
+									<span class="fa fa-star <% if (product.rating > 1.5) { %> checked <% } %>"></span>
+									<span class="fa fa-star <% if (product.rating > 2.5) { %> checked <% } %>"></span>
+									<span class="fa fa-star <% if (product.rating > 3.5) { %> checked <% } %>"></span>
+									<span class="fa fa-star <% if (product.rating > 4.5) { %> checked <% } %>"></span>
+								<% } %>
+
 							<p class="card-text"><%= product.description.substring(0,50) %>...</p>
 						</div>
 						<form action="/cart/add/<%= product._id %>" method="POST">

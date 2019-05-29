@@ -2,6 +2,7 @@ const express = require("express"),
 	  router  = express.Router(),
 	  Product = require("../models/product"),
 	  Comment = require("../models/comment"),
+	  Review = require("../models/review"),
 	  csrf = require('csurf'),
 	  middleware = require("../middleware");
 
@@ -30,11 +31,11 @@ router.get("/new", csrfProtection, middleware.isAdmin, function(req, res){
 
 //Product show page ROUTE
 router.get("/:id", function(req, res){
-	Product.findById(req.params.id).populate("comments").exec(function(err, foundProduct){
+	Product.findById(req.params.id).populate("comments").populate({path: "reviews",options:{sort:{createdAt:-1}}}).exec(function(err, foundProduct){
 		if(err){
 			console.log("will eventualy handle the error2");
 		} else {
-			res.render("products/show", {product: foundProduct});
+			res.render("products/show", {product: foundProduct, csrfToken: req.csrfToken()});
 		}
 	});
 });
@@ -63,6 +64,7 @@ router.get("/:id/edit",middleware.isAdmin, function(req, res){
 
 //Edit product put ROUTE
 router.put("/:id",middleware.isAdmin, function(req, res){
+	delete req.body.campground.rating;
 	Product.findByIdAndUpdate(req.params.id, req.body.product, function(err, updatedProduct){
 		if(err){
 			req.flash("error", "We weren't able to edit the product, please try again");
@@ -74,23 +76,32 @@ router.put("/:id",middleware.isAdmin, function(req, res){
 	});
 });
 
-//Destroy product ROUTE
-router.delete("/:id", middleware.isAdmin, function(req,res){
-	Product.findByIdAndRemove(req.params.id, function(err, removedProduct){
-		if(err){
-			req.flash("error", "Something went wrong while deleting the product, please try again");
-			res.redirect("/products");
-		} else {
-			Comment.deleteMany({_id: { $in: removedProduct.comments}}, function(err){
-				if(err){
-					res.redirect("/prodcuts");				
-				} else {
-					req.flash("success", "Products removed");
-					res.redirect("/products");
-				}
-			});
-		  }	
-	});
+// DESTROY PRODUCT ROUTE
+router.delete("/:id", middleware.isAdmin, function (req, res) {
+    Product.findById(req.params.id, function (err, foundProduct) {
+        if (err) {
+            res.redirect("/products");
+        } else {
+            // deletes all comments associated with the product
+            Comment.remove({"_id": {$in: foundProduct.comments}}, function (err) {
+                if (err) {
+                    console.log(err);
+                    return res.redirect("/products");
+                }
+                // deletes all reviews associated with the product
+                Review.remove({"_id": {$in: foundProduct.reviews}}, function (err) {
+                    if (err) {
+                        console.log(err);
+                        return res.redirect("/products");
+                    }
+                    //  delete the product
+                    foundProduct.remove();
+                    req.flash("success", "Product deleted successfully!");
+                    res.redirect("/products");
+                });
+            });
+        }
+    });
 });
 
 module.exports = router;

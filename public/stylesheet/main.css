@@ -3,6 +3,10 @@
 	flex-wrap: wrap;
 }
 
+.checked {
+    color: orange;
+}
+
 @media (min-width:992px) {
   .col-md-3{
     -ms-flex:0 0 33.333333%;
